@@ -1,0 +1,881 @@
+2026-05-08 10:38:49,774 [DEBUG]  Including SPN with table_set {'lineorder'} with sampling ratio(1000000 / 6001173.0)
+2026-05-08 10:38:49,776 [DEBUG]  Including SPN with table_set {'dwdate'} with sampling ratio(2557 / 2557.0)
+2026-05-08 10:38:49,777 [DEBUG]  Including SPN with table_set {'customer'} with sampling ratio(30000 / 30000.0)
+2026-05-08 10:38:49,779 [DEBUG]  Including SPN with table_set {'part'} with sampling ratio(200000 / 200000.0)
+2026-05-08 10:38:49,780 [DEBUG]  Including SPN with table_set {'supplier'} with sampling ratio(2000 / 2000.0)
+2026-05-08 10:38:49,784 [INFO ]  Evaluating AQP query 0: SELECT SUM(lo_extendedprice * lo_discount) FROM lineorder, dwdate WHERE lo_orderdate = d_datekey AND d_year = 1993 AND lo_discount > 1 AND lo_discount < 3 AND lo_quantity < 25;
+2026-05-08 10:38:49,786 [INFO ]  [QUERY TRACE][parse_query] sql=SELECT SUM(lo_extendedprice * lo_discount) FROM lineorder, dwdate WHERE lo_orderdate = d_datekey AND d_year = 1993 AND lo_discount > 1 AND lo_discount < 3 AND lo_quantity < 25;
+2026-05-08 10:38:49,787 [INFO ]  [QUERY TRACE][parse_query] query_type=AQP tables=['dwdate', 'lineorder'] joins=['lineorder.lo_orderdate = dwdate.d_datekey'] group_bys=[] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_extendedprice'), ('lineorder', 'lo_discount')])]
+2026-05-08 10:38:49,787 [INFO ]  [QUERY TRACE][parse_query] where={'dwdate': ['d_year=1993'], 'lineorder': ['lo_discount>1', 'lo_discount<3', 'lo_quantity<25']}
+2026-05-08 10:38:49,787 [INFO ]  [QUERY TRACE][evaluate_query] query_type=AQP tables=['dwdate', 'lineorder'] joins=['lineorder.lo_orderdate = dwdate.d_datekey'] group_bys=[] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_extendedprice'), ('lineorder', 'lo_discount')])] where={'dwdate': ['d_year=1993'], 'lineorder': ['lo_discount>1', 'lo_discount<3', 'lo_quantity<25']}
+2026-05-08 10:38:49,787 [INFO ]  [QUERY TRACE][evaluate_query] artificially_added_conditions=[]
+2026-05-08 10:38:49,788 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lo_discount>1'), ('lineorder', 'lo_discount<3'), ('lineorder', 'lo_quantity<25'), ('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 10) evidence_scope=[2, 5]
+2026-05-08 10:38:49,788 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe138b0>', None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe13940>', None, None, None, None]
+2026-05-08 10:38:49,788 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[2, 5] relevant_scope=[2, 5] ranges_shape=(1, 10)
+2026-05-08 10:38:49,788 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe138b0>', None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe13940>', None, None, None, None]
+2026-05-08 10:38:49,807 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'd_year=1993'), ('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[3]
+2026-05-08 10:38:49,807 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe13820>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:49,807 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[3] relevant_scope=[3, 11] ranges_shape=(1, 12)
+2026-05-08 10:38:49,807 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe13820>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:49,808 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[]
+2026-05-08 10:38:49,809 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:49,809 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[] relevant_scope=[11] ranges_shape=(1, 12)
+2026-05-08 10:38:49,809 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:49,809 [INFO ]  [QUERY TRACE][evaluate_query] factors_count=4 cardinalities_shape=None
+2026-05-08 10:38:49,809 [DEBUG]  		predicted cardinality: 47978.09625991818
+2026-05-08 10:38:49,809 [DEBUG]  		computed prototypical cardinality in 0.02219609497115016 secs.
+2026-05-08 10:38:49,809 [INFO ]  [QUERY TRACE][evaluate_query] expectation_spn_tables=['lineorder'] expectation= * E(lineorder.lo_extendedprice*lineorder.lo_discount| lineorder.lo_discount>1 Λ lineorder.lo_discount<3 Λ lineorder.lo_quantity<25 Λ lineorder.lineorder_nn IS NOT NULL)
+2026-05-08 10:38:49,809 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lo_discount>1'), ('lineorder', 'lo_discount<3'), ('lineorder', 'lo_quantity<25'), ('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 10) evidence_scope=[2, 5]
+2026-05-08 10:38:49,809 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe137c0>', None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe13b80>', None, None, None, None]
+2026-05-08 10:38:49,810 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[2, 5] relevant_scope=[2, 5] ranges_shape=(1, 10)
+2026-05-08 10:38:49,810 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe137c0>', None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe13b80>', None, None, None, None]
+2026-05-08 10:38:49,828 [INFO ]  [QUERY TRACE][expectation] feature_scope=[3, 5] inverted_features=[False, False] evidence_scope=[2, 5] relevant_scope=[2, 3, 5] ranges_shape=(1, 10)
+2026-05-08 10:38:49,828 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe137c0>', None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe13b80>', None, None, None, None]
+2026-05-08 10:38:50,741 [DEBUG]  		computed expectation in 0.93156384723261 secs.
+2026-05-08 10:38:50,741 [DEBUG]  		average expectation: 2473218.6173235513 for [('lineorder', 'lo_extendedprice'), ('lineorder', 'lo_discount')]
+2026-05-08 10:38:50,741 [INFO ]  		total_time:                     0.9542371588759124 secs
+2026-05-08 10:38:50,741 [INFO ]  		predicted:                      118660320893.77109
+2026-05-08 10:38:50,741 [INFO ]  		true:                           118627940126
+2026-05-08 10:38:50,741 [INFO ]  		Calculation: |118627940126 - 118660320893.77109| / 118627940126 = 0.0002729607185010091
+2026-05-08 10:38:50,741 [INFO ]  		relative_error:                 0.03%
+2026-05-08 10:38:50,741 [INFO ]  Evaluating AQP query 1: SELECT SUM(lo_extendedprice * lo_discount) FROM lineorder, dwdate WHERE lo_orderdate = d_datekey AND d_yearmonthnum = 199401 AND lo_discount >4 AND lo_discount < 6 AND lo_quantity>26 AND  lo_quantity<35;
+2026-05-08 10:38:50,744 [INFO ]  [QUERY TRACE][parse_query] sql=SELECT SUM(lo_extendedprice * lo_discount) FROM lineorder, dwdate WHERE lo_orderdate = d_datekey AND d_yearmonthnum = 199401 AND lo_discount >4 AND lo_discount < 6 AND lo_quantity>26 AND  lo_quantity<35;
+2026-05-08 10:38:50,744 [INFO ]  [QUERY TRACE][parse_query] query_type=AQP tables=['dwdate', 'lineorder'] joins=['lineorder.lo_orderdate = dwdate.d_datekey'] group_bys=[] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_extendedprice'), ('lineorder', 'lo_discount')])]
+2026-05-08 10:38:50,744 [INFO ]  [QUERY TRACE][parse_query] where={'dwdate': ['d_yearmonthnum=199401'], 'lineorder': ['lo_discount>4', 'lo_discount<6', 'lo_quantity>26', 'lo_quantity<35']}
+2026-05-08 10:38:50,744 [INFO ]  [QUERY TRACE][evaluate_query] query_type=AQP tables=['dwdate', 'lineorder'] joins=['lineorder.lo_orderdate = dwdate.d_datekey'] group_bys=[] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_extendedprice'), ('lineorder', 'lo_discount')])] where={'dwdate': ['d_yearmonthnum=199401'], 'lineorder': ['lo_discount>4', 'lo_discount<6', 'lo_quantity>26', 'lo_quantity<35']}
+2026-05-08 10:38:50,744 [INFO ]  [QUERY TRACE][evaluate_query] artificially_added_conditions=[]
+2026-05-08 10:38:50,745 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lo_discount>4'), ('lineorder', 'lo_discount<6'), ('lineorder', 'lo_quantity>26'), ('lineorder', 'lo_quantity<35'), ('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 10) evidence_scope=[2, 5]
+2026-05-08 10:38:50,745 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9deb0>', None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9df70>', None, None, None, None]
+2026-05-08 10:38:50,745 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[2, 5] relevant_scope=[2, 5] ranges_shape=(1, 10)
+2026-05-08 10:38:50,745 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9deb0>', None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9df70>', None, None, None, None]
+2026-05-08 10:38:50,758 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'd_yearmonthnum=199401'), ('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[4]
+2026-05-08 10:38:50,758 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9dcd0>', None, None, None, None, None, None, None]
+2026-05-08 10:38:50,758 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[4] relevant_scope=[4, 11] ranges_shape=(1, 12)
+2026-05-08 10:38:50,758 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9dcd0>', None, None, None, None, None, None, None]
+2026-05-08 10:38:50,765 [INFO ]  [QUERY TRACE][evaluate_query] factors_count=4 cardinalities_shape=None
+2026-05-08 10:38:50,765 [DEBUG]  		predicted cardinality: 897.1791204375747
+2026-05-08 10:38:50,765 [DEBUG]  		computed prototypical cardinality in 0.020604799035936594 secs.
+2026-05-08 10:38:50,765 [INFO ]  [QUERY TRACE][evaluate_query] expectation_spn_tables=['lineorder'] expectation= * E(lineorder.lo_extendedprice*lineorder.lo_discount| lineorder.lo_discount>4 Λ lineorder.lo_discount<6 Λ lineorder.lo_quantity>26 Λ lineorder.lo_quantity<35 Λ lineorder.lineorder_nn IS NOT NULL)
+2026-05-08 10:38:50,765 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lo_discount>4'), ('lineorder', 'lo_discount<6'), ('lineorder', 'lo_quantity>26'), ('lineorder', 'lo_quantity<35'), ('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 10) evidence_scope=[2, 5]
+2026-05-08 10:38:50,765 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9dcd0>', None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe130a0>', None, None, None, None]
+2026-05-08 10:38:50,765 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[2, 5] relevant_scope=[2, 5] ranges_shape=(1, 10)
+2026-05-08 10:38:50,765 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9dcd0>', None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe130a0>', None, None, None, None]
+2026-05-08 10:38:50,778 [INFO ]  [QUERY TRACE][expectation] feature_scope=[3, 5] inverted_features=[False, False] evidence_scope=[2, 5] relevant_scope=[2, 3, 5] ranges_shape=(1, 10)
+2026-05-08 10:38:50,778 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9dcd0>', None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe130a0>', None, None, None, None]
+2026-05-08 10:38:51,227 [DEBUG]  		computed expectation in 0.4624554328620434 secs.
+2026-05-08 10:38:51,227 [DEBUG]  		average expectation: 22935735.077865638 for [('lineorder', 'lo_extendedprice'), ('lineorder', 'lo_discount')]
+2026-05-08 10:38:51,227 [INFO ]  		total_time:                     0.4835033928975463 secs
+2026-05-08 10:38:51,227 [INFO ]  		predicted:                      20577462623.748722
+2026-05-08 10:38:51,228 [INFO ]  		true:                           20015801005
+2026-05-08 10:38:51,228 [INFO ]  		Calculation: |20015801005 - 20577462623.748722| / 20015801005 = 0.028060911407363488
+2026-05-08 10:38:51,228 [INFO ]  		relative_error:                 2.81%
+2026-05-08 10:38:51,228 [INFO ]  Evaluating AQP query 2: SELECT SUM(lo_extendedprice * lo_discount) FROM lineorder, dwdate WHERE lo_orderdate = d_datekey AND d_weeknuminyear = 6 AND d_year = 1994 AND lo_discount >5 AND lo_discount < 7 AND lo_quantity > 26 AND lo_quantity<35;
+2026-05-08 10:38:51,230 [INFO ]  [QUERY TRACE][parse_query] sql=SELECT SUM(lo_extendedprice * lo_discount) FROM lineorder, dwdate WHERE lo_orderdate = d_datekey AND d_weeknuminyear = 6 AND d_year = 1994 AND lo_discount >5 AND lo_discount < 7 AND lo_quantity > 26 AND lo_quantity<35;
+2026-05-08 10:38:51,230 [INFO ]  [QUERY TRACE][parse_query] query_type=AQP tables=['dwdate', 'lineorder'] joins=['lineorder.lo_orderdate = dwdate.d_datekey'] group_bys=[] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_extendedprice'), ('lineorder', 'lo_discount')])]
+2026-05-08 10:38:51,230 [INFO ]  [QUERY TRACE][parse_query] where={'dwdate': ['d_weeknuminyear=6', 'd_year=1994'], 'lineorder': ['lo_discount>5', 'lo_discount<7', 'lo_quantity>26', 'lo_quantity<35']}
+2026-05-08 10:38:51,231 [INFO ]  [QUERY TRACE][evaluate_query] query_type=AQP tables=['dwdate', 'lineorder'] joins=['lineorder.lo_orderdate = dwdate.d_datekey'] group_bys=[] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_extendedprice'), ('lineorder', 'lo_discount')])] where={'dwdate': ['d_weeknuminyear=6', 'd_year=1994'], 'lineorder': ['lo_discount>5', 'lo_discount<7', 'lo_quantity>26', 'lo_quantity<35']}
+2026-05-08 10:38:51,231 [INFO ]  [QUERY TRACE][evaluate_query] artificially_added_conditions=[]
+2026-05-08 10:38:51,231 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lo_discount>5'), ('lineorder', 'lo_discount<7'), ('lineorder', 'lo_quantity>26'), ('lineorder', 'lo_quantity<35'), ('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 10) evidence_scope=[2, 5]
+2026-05-08 10:38:51,231 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd972b0>', None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd971c0>', None, None, None, None]
+2026-05-08 10:38:51,231 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[2, 5] relevant_scope=[2, 5] ranges_shape=(1, 10)
+2026-05-08 10:38:51,232 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd972b0>', None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd971c0>', None, None, None, None]
+2026-05-08 10:38:51,244 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'd_weeknuminyear=6'), ('dwdate', 'd_year=1994'), ('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[3, 7]
+2026-05-08 10:38:51,244 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd97a00>', None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd97af0>', None, None, None, None]
+2026-05-08 10:38:51,244 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[3, 7] relevant_scope=[3, 7, 11] ranges_shape=(1, 12)
+2026-05-08 10:38:51,244 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd97a00>', None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd97af0>', None, None, None, None]
+2026-05-08 10:38:51,263 [INFO ]  [QUERY TRACE][evaluate_query] factors_count=4 cardinalities_shape=None
+2026-05-08 10:38:51,263 [DEBUG]  		predicted cardinality: 203.82421299601702
+2026-05-08 10:38:51,263 [DEBUG]  		computed prototypical cardinality in 0.032441199757158756 secs.
+2026-05-08 10:38:51,263 [INFO ]  [QUERY TRACE][evaluate_query] expectation_spn_tables=['lineorder'] expectation= * E(lineorder.lo_extendedprice*lineorder.lo_discount| lineorder.lo_discount>5 Λ lineorder.lo_discount<7 Λ lineorder.lo_quantity>26 Λ lineorder.lo_quantity<35 Λ lineorder.lineorder_nn IS NOT NULL)
+2026-05-08 10:38:51,263 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lo_discount>5'), ('lineorder', 'lo_discount<7'), ('lineorder', 'lo_quantity>26'), ('lineorder', 'lo_quantity<35'), ('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 10) evidence_scope=[2, 5]
+2026-05-08 10:38:51,264 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9de50>', None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9df70>', None, None, None, None]
+2026-05-08 10:38:51,264 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[2, 5] relevant_scope=[2, 5] ranges_shape=(1, 10)
+2026-05-08 10:38:51,264 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9de50>', None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9df70>', None, None, None, None]
+2026-05-08 10:38:51,276 [INFO ]  [QUERY TRACE][expectation] feature_scope=[3, 5] inverted_features=[False, False] evidence_scope=[2, 5] relevant_scope=[2, 3, 5] ranges_shape=(1, 10)
+2026-05-08 10:38:51,276 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9de50>', None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9df70>', None, None, None, None]
+2026-05-08 10:38:51,738 [DEBUG]  		computed expectation in 0.4747566403821111 secs.
+2026-05-08 10:38:51,738 [DEBUG]  		average expectation: 27522882.093438778 for [('lineorder', 'lo_extendedprice'), ('lineorder', 'lo_discount')]
+2026-05-08 10:38:51,738 [INFO ]  		total_time:                     0.5076394630596042 secs
+2026-05-08 10:38:51,738 [INFO ]  		predicted:                      5609829782.077329
+2026-05-08 10:38:51,738 [INFO ]  		true:                           5770199208
+2026-05-08 10:38:51,738 [INFO ]  		Calculation: |5770199208 - 5609829782.077329| / 5770199208 = 0.02779270180140916
+2026-05-08 10:38:51,738 [INFO ]  		relative_error:                 2.78%
+2026-05-08 10:38:51,738 [INFO ]  Evaluating AQP query 3: SELECT SUM(lo_revenue) FROM lineorder, dwdate, part, supplier WHERE lo_orderdate = d_datekey AND lo_partkey = p_partkey AND lo_suppkey = s_suppkey AND p_category = 'MFGR#12' AND s_region = 'AMERICA' GROUP BY d_year, p_brand1 ORDER BY d_year, p_brand1;
+2026-05-08 10:38:51,741 [INFO ]  [QUERY TRACE][parse_query] sql=SELECT SUM(lo_revenue) FROM lineorder, dwdate, part, supplier WHERE lo_orderdate = d_datekey AND lo_partkey = p_partkey AND lo_suppkey = s_suppkey AND p_category = 'MFGR#12' AND s_region = 'AMERICA' GROUP BY d_year, p_brand1 ORDER BY d_year, p_brand1;
+2026-05-08 10:38:51,741 [INFO ]  [QUERY TRACE][parse_query] query_type=AQP tables=['dwdate', 'lineorder', 'part', 'supplier'] joins=['lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_partkey = part.p_partkey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('dwdate', 'd_year'), ('part', 'p_brand1')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])]
+2026-05-08 10:38:51,741 [INFO ]  [QUERY TRACE][parse_query] where={'part': ["p_category='MFGR#12'"], 'supplier': ["s_region='AMERICA'"]}
+2026-05-08 10:38:51,742 [INFO ]  [QUERY TRACE][evaluate_query] query_type=AQP tables=['dwdate', 'lineorder', 'part', 'supplier'] joins=['lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_partkey = part.p_partkey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('dwdate', 'd_year'), ('part', 'p_brand1')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])] where={'part': ["p_category='MFGR#12'"], 'supplier': ["s_region='AMERICA'"]}
+2026-05-08 10:38:51,742 [INFO ]  [QUERY TRACE][group_by_dispatch] requested_group_bys=['dwdate.d_year', 'part.p_brand1']
+2026-05-08 10:38:51,742 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['dwdate'] assigned_group_bys=['dwdate.d_year']
+2026-05-08 10:38:51,742 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['part'] assigned_group_bys=['part.p_brand1']
+2026-05-08 10:38:51,742 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['dwdate.d_year'] raw_conditions=[('dwdate', 'dwdate_nn IS NOT NULL')]
+2026-05-08 10:38:51,742 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[]
+2026-05-08 10:38:51,742 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,742 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[3] feature_scope_columns=['dwdate.d_year']
+2026-05-08 10:38:51,742 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[3] evidence_scope=[3] relevant_scope=[3] evidence_shape=(1, 12)
+2026-05-08 10:38:51,745 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=7 sample_grouped_tuples=[(1997.0,), (1992.0,), (1998.0,), (1995.0,), (1996.0,)]
+2026-05-08 10:38:51,745 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['dwdate.d_year'] total_groups=7 sample_raw_groups=[(1992.0,), (1998.0,), (1995.0,), (1994.0,), (1997.0,)] sample_translated_groups=[(1992.0,), (1998.0,), (1995.0,), (1994.0,), (1997.0,)]
+2026-05-08 10:38:51,745 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['part.p_brand1'] raw_conditions=[('part', "p_category='MFGR#12'"), ('part', 'part_nn IS NOT NULL')]
+2026-05-08 10:38:51,745 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', "p_category='MFGR#12'"), ('part', 'part_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 7) evidence_scope=[1]
+2026-05-08 10:38:51,745 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fd9d070>', None, None, None, None, None]
+2026-05-08 10:38:51,745 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[1] feature_scope_columns=['part.p_brand1']
+2026-05-08 10:38:51,745 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[1] evidence_scope=[1] relevant_scope=[1] evidence_shape=(1, 7)
+2026-05-08 10:38:51,760 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=40 sample_grouped_tuples=[(612,), (383,), (868,), (508,), (654,)]
+2026-05-08 10:38:51,761 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['part.p_brand1'] total_groups=40 sample_raw_groups=[(611,), (454,), (968,), (943,), (810,)] sample_translated_groups=[('MFGR#1228',), ('MFGR#129',), ('MFGR#1215',), ('MFGR#1227',), ('MFGR#1213',)]
+2026-05-08 10:38:51,762 [INFO ]  [QUERY TRACE][group_by_dispatch] group_scopes=['dwdate.d_year', 'part.p_brand1'] total_group_candidates=280 sample_groups=[(1992.0, 'MFGR#1228'), (1992.0, 'MFGR#129'), (1992.0, 'MFGR#1215'), (1992.0, 'MFGR#1227'), (1992.0, 'MFGR#1213')]
+2026-05-08 10:38:51,762 [INFO ]  [QUERY TRACE][evaluate_query] technical_group_by_scopes=[('dwdate', 'd_year'), ('part', 'p_brand1')] sample_result_tuples=[(1992.0, 'MFGR#1228'), (1992.0, 'MFGR#129'), (1992.0, 'MFGR#1215'), (1992.0, 'MFGR#1227'), (1992.0, 'MFGR#1213')]
+2026-05-08 10:38:51,762 [DEBUG]  		computed 280 group by statements in 0.02072385884821415 secs.
+2026-05-08 10:38:51,763 [INFO ]  [QUERY TRACE][evaluate_query] artificially_added_conditions=[('dwdate', 'd_year=1992.0'), ('part', 'p_brand1=MFGR#1228')]
+2026-05-08 10:38:51,763 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'd_year=1992.0'), ('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[3]
+2026-05-08 10:38:51,763 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd97160>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,763 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[3] relevant_scope=[3, 11] ranges_shape=(1, 12)
+2026-05-08 10:38:51,763 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd97160>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,765 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 10) evidence_scope=[]
+2026-05-08 10:38:51,765 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,765 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[] relevant_scope=[] ranges_shape=(1, 10)
+2026-05-08 10:38:51,765 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,765 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 10) evidence_scope=[]
+2026-05-08 10:38:51,765 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,765 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[] relevant_scope=[] ranges_shape=(1, 10)
+2026-05-08 10:38:51,765 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,765 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_region='AMERICA'"), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 5) evidence_scope=[2]
+2026-05-08 10:38:51,765 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fd975e0>', None, None]
+2026-05-08 10:38:51,766 [INFO ]  [QUERY TRACE][expectation] feature_scope=[4] inverted_features=[False] evidence_scope=[2] relevant_scope=[2, 4] ranges_shape=(1, 5)
+2026-05-08 10:38:51,766 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fd975e0>', None, None]
+2026-05-08 10:38:51,768 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 5) evidence_scope=[]
+2026-05-08 10:38:51,768 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None]
+2026-05-08 10:38:51,768 [INFO ]  [QUERY TRACE][expectation] feature_scope=[4] inverted_features=[False] evidence_scope=[] relevant_scope=[4] ranges_shape=(1, 5)
+2026-05-08 10:38:51,768 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None]
+2026-05-08 10:38:51,768 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', "p_category='MFGR#12'"), ('part', 'p_brand1=MFGR#1228'), ('part', 'part_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 7) evidence_scope=[1]
+2026-05-08 10:38:51,768 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fdb9640>', None, None, None, None, None]
+2026-05-08 10:38:51,769 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[1] relevant_scope=[1, 6] ranges_shape=(1, 7)
+2026-05-08 10:38:51,769 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fdb9640>', None, None, None, None, None]
+2026-05-08 10:38:51,769 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', 'part_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 7) evidence_scope=[]
+2026-05-08 10:38:51,770 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None]
+2026-05-08 10:38:51,770 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[] relevant_scope=[6] ranges_shape=(1, 7)
+2026-05-08 10:38:51,770 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None]
+2026-05-08 10:38:51,770 [INFO ]  [QUERY TRACE][evaluate_query] factors_count=8 cardinalities_shape=None
+2026-05-08 10:38:51,770 [DEBUG]  		computed prototypical cardinality in 0.007510589901357889 secs.
+2026-05-08 10:38:51,770 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=['dwdate.d_year'] ranges_shape=(7, 12) evidence_scope=[3]
+2026-05-08 10:38:51,770 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fdb97c0>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,770 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[3] relevant_scope=[3, 11] ranges_shape=(7, 12)
+2026-05-08 10:38:51,771 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fdb97c0>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,775 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', "p_category='MFGR#12'"), ('part', 'part_nn IS NOT NULL')] group_by_columns=['part.p_brand1'] ranges_shape=(40, 7) evidence_scope=[1]
+2026-05-08 10:38:51,775 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fdb9700>', None, None, None, None, None]
+2026-05-08 10:38:51,775 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[1] relevant_scope=[1, 6] ranges_shape=(40, 7)
+2026-05-08 10:38:51,775 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fdb9700>', None, None, None, None, None]
+2026-05-08 10:38:51,776 [DEBUG]  		computed all cardinalities in 0.005909955129027367 secs.
+2026-05-08 10:38:51,776 [DEBUG]  		average_cardinality: 159.75956939258887
+2026-05-08 10:38:51,776 [INFO ]  [QUERY TRACE][evaluate_query] expectation_spn_tables=['lineorder'] expectation= * E(lineorder.lo_revenue| lineorder.lineorder_nn IS NOT NULL)
+2026-05-08 10:38:51,776 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=['dwdate.d_year', 'part.p_brand1'] ranges_shape=(280, 10) evidence_scope=[]
+2026-05-08 10:38:51,777 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,777 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[] relevant_scope=[] ranges_shape=(280, 10)
+2026-05-08 10:38:51,777 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,777 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[] relevant_scope=[6] ranges_shape=(280, 10)
+2026-05-08 10:38:51,777 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,808 [DEBUG]  		computed expectation in 0.03174356371164322 secs.
+2026-05-08 10:38:51,808 [DEBUG]  		average expectation: 2910345.6626718324 for [('lineorder', 'lo_revenue')]
+2026-05-08 10:38:51,808 [INFO ]  		total_time:                     0.06680480763316154 secs
+2026-05-08 10:38:51,817 [INFO ]  		total_bins:                     280
+2026-05-08 10:38:51,817 [INFO ]  		bin_completeness:               inf%
+2026-05-08 10:38:51,817 [INFO ]  		average_relative_error:         inf%
+2026-05-08 10:38:51,818 [INFO ]  		false_bin_percentage:           inf%
+2026-05-08 10:38:51,818 [INFO ]  Evaluating AQP query 4: SELECT SUM(lo_revenue) FROM lineorder, dwdate, part, supplier WHERE lo_orderdate = d_datekey AND lo_partkey = p_partkey AND lo_suppkey = s_suppkey AND p_brand1 = 'MFGR#2221' AND s_region = 'ASIA' GROUP BY d_year, p_brand1 ORDER BY d_year, p_brand1;
+2026-05-08 10:38:51,820 [INFO ]  [QUERY TRACE][parse_query] sql=SELECT SUM(lo_revenue) FROM lineorder, dwdate, part, supplier WHERE lo_orderdate = d_datekey AND lo_partkey = p_partkey AND lo_suppkey = s_suppkey AND p_brand1 = 'MFGR#2221' AND s_region = 'ASIA' GROUP BY d_year, p_brand1 ORDER BY d_year, p_brand1;
+2026-05-08 10:38:51,821 [INFO ]  [QUERY TRACE][parse_query] query_type=AQP tables=['dwdate', 'lineorder', 'part', 'supplier'] joins=['lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_partkey = part.p_partkey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('dwdate', 'd_year'), ('part', 'p_brand1')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])]
+2026-05-08 10:38:51,821 [INFO ]  [QUERY TRACE][parse_query] where={'part': ["p_brand1='MFGR#2221'"], 'supplier': ["s_region='ASIA'"]}
+2026-05-08 10:38:51,821 [INFO ]  [QUERY TRACE][evaluate_query] query_type=AQP tables=['dwdate', 'lineorder', 'part', 'supplier'] joins=['lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_partkey = part.p_partkey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('dwdate', 'd_year'), ('part', 'p_brand1')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])] where={'part': ["p_brand1='MFGR#2221'"], 'supplier': ["s_region='ASIA'"]}
+2026-05-08 10:38:51,821 [INFO ]  [QUERY TRACE][group_by_dispatch] requested_group_bys=['dwdate.d_year', 'part.p_brand1']
+2026-05-08 10:38:51,821 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['dwdate'] assigned_group_bys=['dwdate.d_year']
+2026-05-08 10:38:51,821 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['part'] assigned_group_bys=['part.p_brand1']
+2026-05-08 10:38:51,821 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['dwdate.d_year'] raw_conditions=[('dwdate', 'dwdate_nn IS NOT NULL')]
+2026-05-08 10:38:51,821 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[]
+2026-05-08 10:38:51,821 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,821 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[3] feature_scope_columns=['dwdate.d_year']
+2026-05-08 10:38:51,821 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[3] evidence_scope=[3] relevant_scope=[3] evidence_shape=(1, 12)
+2026-05-08 10:38:51,824 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=7 sample_grouped_tuples=[(1997.0,), (1992.0,), (1998.0,), (1995.0,), (1996.0,)]
+2026-05-08 10:38:51,824 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['dwdate.d_year'] total_groups=7 sample_raw_groups=[(1992.0,), (1998.0,), (1995.0,), (1994.0,), (1997.0,)] sample_translated_groups=[(1992.0,), (1998.0,), (1995.0,), (1994.0,), (1997.0,)]
+2026-05-08 10:38:51,824 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['part.p_brand1'] raw_conditions=[('part', "p_brand1='MFGR#2221'"), ('part', 'part_nn IS NOT NULL')]
+2026-05-08 10:38:51,824 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', "p_brand1='MFGR#2221'"), ('part', 'part_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 7) evidence_scope=[1]
+2026-05-08 10:38:51,824 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fd97640>', None, None, None, None, None]
+2026-05-08 10:38:51,824 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[1] feature_scope_columns=['part.p_brand1']
+2026-05-08 10:38:51,824 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[1] evidence_scope=[1] relevant_scope=[1] evidence_shape=(1, 7)
+2026-05-08 10:38:51,839 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=1 sample_grouped_tuples=[(676,)]
+2026-05-08 10:38:51,840 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['part.p_brand1'] total_groups=1 sample_raw_groups=[(676,)] sample_translated_groups=[('MFGR#2221',)]
+2026-05-08 10:38:51,840 [INFO ]  [QUERY TRACE][group_by_dispatch] group_scopes=['dwdate.d_year', 'part.p_brand1'] total_group_candidates=7 sample_groups=[(1992.0, 'MFGR#2221'), (1998.0, 'MFGR#2221'), (1995.0, 'MFGR#2221'), (1994.0, 'MFGR#2221'), (1997.0, 'MFGR#2221')]
+2026-05-08 10:38:51,840 [INFO ]  [QUERY TRACE][evaluate_query] technical_group_by_scopes=[('dwdate', 'd_year'), ('part', 'p_brand1')] sample_result_tuples=[(1992.0, 'MFGR#2221'), (1998.0, 'MFGR#2221'), (1995.0, 'MFGR#2221'), (1994.0, 'MFGR#2221'), (1997.0, 'MFGR#2221')]
+2026-05-08 10:38:51,840 [DEBUG]  		computed 7 group by statements in 0.019184802193194628 secs.
+2026-05-08 10:38:51,840 [INFO ]  [QUERY TRACE][evaluate_query] artificially_added_conditions=[('dwdate', 'd_year=1992.0'), ('part', 'p_brand1=MFGR#2221')]
+2026-05-08 10:38:51,841 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_region='ASIA'"), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 5) evidence_scope=[2]
+2026-05-08 10:38:51,841 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d556190>', None, None]
+2026-05-08 10:38:51,841 [INFO ]  [QUERY TRACE][expectation] feature_scope=[4] inverted_features=[False] evidence_scope=[2] relevant_scope=[2, 4] ranges_shape=(1, 5)
+2026-05-08 10:38:51,841 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d556190>', None, None]
+2026-05-08 10:38:51,843 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', "p_brand1='MFGR#2221'"), ('part', 'p_brand1=MFGR#2221'), ('part', 'part_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 7) evidence_scope=[1]
+2026-05-08 10:38:51,843 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d5563d0>', None, None, None, None, None]
+2026-05-08 10:38:51,843 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[1] relevant_scope=[1, 6] ranges_shape=(1, 7)
+2026-05-08 10:38:51,844 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d5563d0>', None, None, None, None, None]
+2026-05-08 10:38:51,844 [INFO ]  [QUERY TRACE][evaluate_query] factors_count=8 cardinalities_shape=None
+2026-05-08 10:38:51,844 [DEBUG]  		computed prototypical cardinality in 0.00436902092769742 secs.
+2026-05-08 10:38:51,845 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=['dwdate.d_year'] ranges_shape=(7, 12) evidence_scope=[3]
+2026-05-08 10:38:51,845 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8d556970>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,845 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[3] relevant_scope=[3, 11] ranges_shape=(7, 12)
+2026-05-08 10:38:51,845 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8d556970>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,848 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', "p_brand1='MFGR#2221'"), ('part', 'part_nn IS NOT NULL')] group_by_columns=['part.p_brand1'] ranges_shape=(1, 7) evidence_scope=[1]
+2026-05-08 10:38:51,848 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d5565b0>', None, None, None, None, None]
+2026-05-08 10:38:51,848 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[1] relevant_scope=[1, 6] ranges_shape=(1, 7)
+2026-05-08 10:38:51,848 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d5565b0>', None, None, None, None, None]
+2026-05-08 10:38:51,849 [DEBUG]  		computed all cardinalities in 0.004343149717897177 secs.
+2026-05-08 10:38:51,849 [DEBUG]  		average_cardinality: 189.28794791491515
+2026-05-08 10:38:51,849 [INFO ]  [QUERY TRACE][evaluate_query] expectation_spn_tables=['lineorder'] expectation= * E(lineorder.lo_revenue| lineorder.lineorder_nn IS NOT NULL)
+2026-05-08 10:38:51,849 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=['dwdate.d_year', 'part.p_brand1'] ranges_shape=(7, 10) evidence_scope=[]
+2026-05-08 10:38:51,849 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,849 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[] relevant_scope=[] ranges_shape=(7, 10)
+2026-05-08 10:38:51,849 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,849 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[] relevant_scope=[6] ranges_shape=(7, 10)
+2026-05-08 10:38:51,849 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,853 [DEBUG]  		computed expectation in 0.004413126036524773 secs.
+2026-05-08 10:38:51,854 [DEBUG]  		average expectation: 2910345.662671832 for [('lineorder', 'lo_revenue')]
+2026-05-08 10:38:51,854 [INFO ]  		total_time:                     0.03305638022720814 secs
+2026-05-08 10:38:51,854 [INFO ]  		total_bins:                     7
+2026-05-08 10:38:51,854 [INFO ]  		bin_completeness:               inf%
+2026-05-08 10:38:51,854 [INFO ]  		average_relative_error:         inf%
+2026-05-08 10:38:51,854 [INFO ]  		false_bin_percentage:           inf%
+2026-05-08 10:38:51,854 [INFO ]  Evaluating AQP query 5: SELECT SUM(lo_revenue) FROM lineorder, dwdate, part, supplier WHERE lo_orderdate = d_datekey AND lo_partkey = p_partkey AND lo_suppkey = s_suppkey AND p_brand1 = 'MFGR#2239' AND s_region = 'EUROPE' GROUP BY d_year, p_brand1 ORDER BY d_year, p_brand1;
+2026-05-08 10:38:51,857 [INFO ]  [QUERY TRACE][parse_query] sql=SELECT SUM(lo_revenue) FROM lineorder, dwdate, part, supplier WHERE lo_orderdate = d_datekey AND lo_partkey = p_partkey AND lo_suppkey = s_suppkey AND p_brand1 = 'MFGR#2239' AND s_region = 'EUROPE' GROUP BY d_year, p_brand1 ORDER BY d_year, p_brand1;
+2026-05-08 10:38:51,857 [INFO ]  [QUERY TRACE][parse_query] query_type=AQP tables=['dwdate', 'lineorder', 'part', 'supplier'] joins=['lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_partkey = part.p_partkey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('dwdate', 'd_year'), ('part', 'p_brand1')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])]
+2026-05-08 10:38:51,857 [INFO ]  [QUERY TRACE][parse_query] where={'part': ["p_brand1='MFGR#2239'"], 'supplier': ["s_region='EUROPE'"]}
+2026-05-08 10:38:51,857 [INFO ]  [QUERY TRACE][evaluate_query] query_type=AQP tables=['dwdate', 'lineorder', 'part', 'supplier'] joins=['lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_partkey = part.p_partkey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('dwdate', 'd_year'), ('part', 'p_brand1')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])] where={'part': ["p_brand1='MFGR#2239'"], 'supplier': ["s_region='EUROPE'"]}
+2026-05-08 10:38:51,857 [INFO ]  [QUERY TRACE][group_by_dispatch] requested_group_bys=['dwdate.d_year', 'part.p_brand1']
+2026-05-08 10:38:51,857 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['dwdate'] assigned_group_bys=['dwdate.d_year']
+2026-05-08 10:38:51,857 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['part'] assigned_group_bys=['part.p_brand1']
+2026-05-08 10:38:51,857 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['dwdate.d_year'] raw_conditions=[('dwdate', 'dwdate_nn IS NOT NULL')]
+2026-05-08 10:38:51,857 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[]
+2026-05-08 10:38:51,857 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,857 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[3] feature_scope_columns=['dwdate.d_year']
+2026-05-08 10:38:51,857 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[3] evidence_scope=[3] relevant_scope=[3] evidence_shape=(1, 12)
+2026-05-08 10:38:51,860 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=7 sample_grouped_tuples=[(1997.0,), (1992.0,), (1998.0,), (1995.0,), (1996.0,)]
+2026-05-08 10:38:51,860 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['dwdate.d_year'] total_groups=7 sample_raw_groups=[(1992.0,), (1998.0,), (1995.0,), (1994.0,), (1997.0,)] sample_translated_groups=[(1992.0,), (1998.0,), (1995.0,), (1994.0,), (1997.0,)]
+2026-05-08 10:38:51,860 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['part.p_brand1'] raw_conditions=[('part', "p_brand1='MFGR#2239'"), ('part', 'part_nn IS NOT NULL')]
+2026-05-08 10:38:51,860 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', "p_brand1='MFGR#2239'"), ('part', 'part_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 7) evidence_scope=[1]
+2026-05-08 10:38:51,860 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a80ba3910>', None, None, None, None, None]
+2026-05-08 10:38:51,860 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[1] feature_scope_columns=['part.p_brand1']
+2026-05-08 10:38:51,860 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[1] evidence_scope=[1] relevant_scope=[1] evidence_shape=(1, 7)
+2026-05-08 10:38:51,875 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=1 sample_grouped_tuples=[(883,)]
+2026-05-08 10:38:51,876 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['part.p_brand1'] total_groups=1 sample_raw_groups=[(883,)] sample_translated_groups=[('MFGR#2239',)]
+2026-05-08 10:38:51,876 [INFO ]  [QUERY TRACE][group_by_dispatch] group_scopes=['dwdate.d_year', 'part.p_brand1'] total_group_candidates=7 sample_groups=[(1992.0, 'MFGR#2239'), (1998.0, 'MFGR#2239'), (1995.0, 'MFGR#2239'), (1994.0, 'MFGR#2239'), (1997.0, 'MFGR#2239')]
+2026-05-08 10:38:51,876 [INFO ]  [QUERY TRACE][evaluate_query] technical_group_by_scopes=[('dwdate', 'd_year'), ('part', 'p_brand1')] sample_result_tuples=[(1992.0, 'MFGR#2239'), (1998.0, 'MFGR#2239'), (1995.0, 'MFGR#2239'), (1994.0, 'MFGR#2239'), (1997.0, 'MFGR#2239')]
+2026-05-08 10:38:51,877 [DEBUG]  		computed 7 group by statements in 0.019231772981584072 secs.
+2026-05-08 10:38:51,877 [INFO ]  [QUERY TRACE][evaluate_query] artificially_added_conditions=[('dwdate', 'd_year=1992.0'), ('part', 'p_brand1=MFGR#2239')]
+2026-05-08 10:38:51,877 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_region='EUROPE'"), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 5) evidence_scope=[2]
+2026-05-08 10:38:51,877 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d556af0>', None, None]
+2026-05-08 10:38:51,878 [INFO ]  [QUERY TRACE][expectation] feature_scope=[4] inverted_features=[False] evidence_scope=[2] relevant_scope=[2, 4] ranges_shape=(1, 5)
+2026-05-08 10:38:51,878 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d556af0>', None, None]
+2026-05-08 10:38:51,880 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', "p_brand1='MFGR#2239'"), ('part', 'p_brand1=MFGR#2239'), ('part', 'part_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 7) evidence_scope=[1]
+2026-05-08 10:38:51,880 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d556c10>', None, None, None, None, None]
+2026-05-08 10:38:51,880 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[1] relevant_scope=[1, 6] ranges_shape=(1, 7)
+2026-05-08 10:38:51,880 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d556c10>', None, None, None, None, None]
+2026-05-08 10:38:51,881 [INFO ]  [QUERY TRACE][evaluate_query] factors_count=8 cardinalities_shape=None
+2026-05-08 10:38:51,881 [DEBUG]  		computed prototypical cardinality in 0.0043141599744558334 secs.
+2026-05-08 10:38:51,881 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=['dwdate.d_year'] ranges_shape=(7, 12) evidence_scope=[3]
+2026-05-08 10:38:51,881 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8d556610>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,881 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[3] relevant_scope=[3, 11] ranges_shape=(7, 12)
+2026-05-08 10:38:51,881 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8d556610>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,884 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', "p_brand1='MFGR#2239'"), ('part', 'part_nn IS NOT NULL')] group_by_columns=['part.p_brand1'] ranges_shape=(1, 7) evidence_scope=[1]
+2026-05-08 10:38:51,885 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d5560d0>', None, None, None, None, None]
+2026-05-08 10:38:51,885 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[1] relevant_scope=[1, 6] ranges_shape=(1, 7)
+2026-05-08 10:38:51,885 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d5560d0>', None, None, None, None, None]
+2026-05-08 10:38:51,886 [DEBUG]  		computed all cardinalities in 0.004354991018772125 secs.
+2026-05-08 10:38:51,886 [DEBUG]  		average_cardinality: 178.52839869020337
+2026-05-08 10:38:51,886 [INFO ]  [QUERY TRACE][evaluate_query] expectation_spn_tables=['lineorder'] expectation= * E(lineorder.lo_revenue| lineorder.lineorder_nn IS NOT NULL)
+2026-05-08 10:38:51,886 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=['dwdate.d_year', 'part.p_brand1'] ranges_shape=(7, 10) evidence_scope=[]
+2026-05-08 10:38:51,886 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,886 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[] relevant_scope=[] ranges_shape=(7, 10)
+2026-05-08 10:38:51,886 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,886 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[] relevant_scope=[6] ranges_shape=(7, 10)
+2026-05-08 10:38:51,886 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,890 [DEBUG]  		computed expectation in 0.004392096772789955 secs.
+2026-05-08 10:38:51,890 [DEBUG]  		average expectation: 2910345.662671832 for [('lineorder', 'lo_revenue')]
+2026-05-08 10:38:51,890 [INFO ]  		total_time:                     0.03327744035050273 secs
+2026-05-08 10:38:51,890 [INFO ]  		total_bins:                     7
+2026-05-08 10:38:51,890 [INFO ]  		bin_completeness:               inf%
+2026-05-08 10:38:51,890 [INFO ]  		average_relative_error:         inf%
+2026-05-08 10:38:51,890 [INFO ]  		false_bin_percentage:           inf%
+2026-05-08 10:38:51,890 [INFO ]  Evaluating AQP query 6: SELECT SUM(lo_revenue)  FROM customer, lineorder, supplier, dwdate WHERE lo_custkey = c_custkey AND lo_suppkey = s_suppkey AND lo_orderdate = d_datekey AND c_region = 'ASIA' AND s_region = 'ASIA' AND d_year >= 1992 AND d_year <= 1997 GROUP BY c_nation, s_nation, d_year;
+2026-05-08 10:38:51,894 [INFO ]  [QUERY TRACE][parse_query] sql=SELECT SUM(lo_revenue)  FROM customer, lineorder, supplier, dwdate WHERE lo_custkey = c_custkey AND lo_suppkey = s_suppkey AND lo_orderdate = d_datekey AND c_region = 'ASIA' AND s_region = 'ASIA' AND d_year >= 1992 AND d_year <= 1997 GROUP BY c_nation, s_nation, d_year;
+2026-05-08 10:38:51,894 [INFO ]  [QUERY TRACE][parse_query] query_type=AQP tables=['customer', 'dwdate', 'lineorder', 'supplier'] joins=['lineorder.lo_custkey = customer.c_custkey', 'lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('customer', 'c_nation'), ('supplier', 's_nation'), ('dwdate', 'd_year')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])]
+2026-05-08 10:38:51,894 [INFO ]  [QUERY TRACE][parse_query] where={'customer': ["c_region='ASIA'"], 'supplier': ["s_region='ASIA'"], 'dwdate': ['d_year>=1992', 'd_year<=1997']}
+2026-05-08 10:38:51,894 [INFO ]  [QUERY TRACE][evaluate_query] query_type=AQP tables=['customer', 'dwdate', 'lineorder', 'supplier'] joins=['lineorder.lo_custkey = customer.c_custkey', 'lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('customer', 'c_nation'), ('supplier', 's_nation'), ('dwdate', 'd_year')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])] where={'customer': ["c_region='ASIA'"], 'supplier': ["s_region='ASIA'"], 'dwdate': ['d_year>=1992', 'd_year<=1997']}
+2026-05-08 10:38:51,894 [INFO ]  [QUERY TRACE][group_by_dispatch] requested_group_bys=['customer.c_nation', 'supplier.s_nation', 'dwdate.d_year']
+2026-05-08 10:38:51,894 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['customer'] assigned_group_bys=['customer.c_nation']
+2026-05-08 10:38:51,894 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['supplier'] assigned_group_bys=['supplier.s_nation']
+2026-05-08 10:38:51,894 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['dwdate'] assigned_group_bys=['dwdate.d_year']
+2026-05-08 10:38:51,894 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['customer.c_nation'] raw_conditions=[('customer', "c_region='ASIA'"), ('customer', 'customer_nn IS NOT NULL')]
+2026-05-08 10:38:51,894 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', "c_region='ASIA'"), ('customer', 'customer_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 3) evidence_scope=[0]
+2026-05-08 10:38:51,894 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d5567f0>', None, None]
+2026-05-08 10:38:51,894 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[0] feature_scope_columns=['customer.c_city']
+2026-05-08 10:38:51,895 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[0] evidence_scope=[0] relevant_scope=[0] evidence_shape=(1, 3)
+2026-05-08 10:38:51,898 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=50 sample_grouped_tuples=[(237,), (60,), (142,), (151,), (47,)]
+2026-05-08 10:38:51,899 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['customer.c_city'] total_groups=5 sample_raw_groups=[([56, 141, 55, 183, 73, 39, 99, 193, 61, 164],), ([237, 151, 86, 24, 33, 216, 209, 50, 156, 91],), ([111, 175, 71, 238, 9, 75, 205, 244, 21, 140],), ([60, 181, 7, 89, 174, 64, 121, 240, 19, 94],), ([142, 47, 53, 199, 168, 128, 250, 97, 32, 226],)] sample_translated_groups=[('INDONESIA',), ('JAPAN',), ('INDIA',), ('CHINA',), ('VIETNAM',)]
+2026-05-08 10:38:51,899 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['supplier.s_nation'] raw_conditions=[('supplier', "s_region='ASIA'"), ('supplier', 'supplier_nn IS NOT NULL')]
+2026-05-08 10:38:51,899 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_region='ASIA'"), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 5) evidence_scope=[2]
+2026-05-08 10:38:51,899 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d556e50>', None, None]
+2026-05-08 10:38:51,899 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[2] feature_scope_columns=['supplier.s_city']
+2026-05-08 10:38:51,899 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[2] evidence_scope=[2] relevant_scope=[2] evidence_shape=(1, 5)
+2026-05-08 10:38:51,903 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=50 sample_grouped_tuples=[(124,), (23,), (87,), (38,), (224,)]
+2026-05-08 10:38:51,903 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['supplier.s_city'] total_groups=5 sample_raw_groups=[([23, 49, 119, 183, 137, 79, 200, 44, 50, 140],), ([124, 224, 111, 128, 42, 72, 203, 227, 193, 52],), ([38, 223, 250, 15, 88, 179, 154, 172, 107, 12],), ([40, 73, 234, 11, 136, 96, 108, 242, 67, 27],), ([87, 166, 230, 86, 26, 35, 236, 165, 171, 61],)] sample_translated_groups=[('INDONESIA',), ('JAPAN',), ('INDIA',), ('CHINA',), ('VIETNAM',)]
+2026-05-08 10:38:51,904 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['dwdate.d_year'] raw_conditions=[('dwdate', 'd_year>=1992'), ('dwdate', 'd_year<=1997'), ('dwdate', 'dwdate_nn IS NOT NULL')]
+2026-05-08 10:38:51,904 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'd_year>=1992'), ('dwdate', 'd_year<=1997'), ('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[3]
+2026-05-08 10:38:51,904 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8d556d90>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,904 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[3] feature_scope_columns=['dwdate.d_year']
+2026-05-08 10:38:51,904 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[3] evidence_scope=[3] relevant_scope=[3] evidence_shape=(1, 12)
+2026-05-08 10:38:51,907 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=6 sample_grouped_tuples=[(1997.0,), (1992.0,), (1995.0,), (1996.0,), (1993.0,)]
+2026-05-08 10:38:51,907 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['dwdate.d_year'] total_groups=6 sample_raw_groups=[(1992.0,), (1995.0,), (1994.0,), (1997.0,), (1996.0,)] sample_translated_groups=[(1992.0,), (1995.0,), (1994.0,), (1997.0,), (1996.0,)]
+2026-05-08 10:38:51,907 [INFO ]  [QUERY TRACE][group_by_dispatch] group_scopes=['customer.c_city', 'supplier.s_city', 'dwdate.d_year'] total_group_candidates=150 sample_groups=[('INDONESIA', 'INDONESIA', 1992.0), ('INDONESIA', 'INDONESIA', 1995.0), ('INDONESIA', 'INDONESIA', 1994.0), ('INDONESIA', 'INDONESIA', 1997.0), ('INDONESIA', 'INDONESIA', 1996.0)]
+2026-05-08 10:38:51,907 [INFO ]  [QUERY TRACE][evaluate_query] technical_group_by_scopes=[('customer', 'c_city'), ('supplier', 's_city'), ('dwdate', 'd_year')] sample_result_tuples=[('INDONESIA', 'INDONESIA', 1992.0), ('INDONESIA', 'INDONESIA', 1995.0), ('INDONESIA', 'INDONESIA', 1994.0), ('INDONESIA', 'INDONESIA', 1997.0), ('INDONESIA', 'INDONESIA', 1996.0)]
+2026-05-08 10:38:51,907 [DEBUG]  		computed 150 group by statements in 0.013389295898377895 secs.
+2026-05-08 10:38:51,908 [INFO ]  [QUERY TRACE][evaluate_query] artificially_added_conditions=[('customer', 'c_nation=INDONESIA'), ('supplier', 's_nation=INDONESIA'), ('dwdate', 'd_year=1992.0')]
+2026-05-08 10:38:51,908 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'd_year>=1992'), ('dwdate', 'd_year<=1997'), ('dwdate', 'd_year=1992.0'), ('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[3]
+2026-05-08 10:38:51,908 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a79718640>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,908 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[3] relevant_scope=[3, 11] ranges_shape=(1, 12)
+2026-05-08 10:38:51,908 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a79718640>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,910 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_region='ASIA'"), ('supplier', 's_nation=INDONESIA'), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 5) evidence_scope=[2]
+2026-05-08 10:38:51,910 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fd9ddf0>', None, None]
+2026-05-08 10:38:51,910 [INFO ]  [QUERY TRACE][expectation] feature_scope=[4] inverted_features=[False] evidence_scope=[2] relevant_scope=[2, 4] ranges_shape=(1, 5)
+2026-05-08 10:38:51,910 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fd9ddf0>', None, None]
+2026-05-08 10:38:51,912 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', "c_region='ASIA'"), ('customer', 'c_nation=INDONESIA'), ('customer', 'customer_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 3) evidence_scope=[0]
+2026-05-08 10:38:51,912 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fd9df70>', None, None]
+2026-05-08 10:38:51,912 [INFO ]  [QUERY TRACE][expectation] feature_scope=[2] inverted_features=[False] evidence_scope=[0] relevant_scope=[0, 2] ranges_shape=(1, 3)
+2026-05-08 10:38:51,912 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fd9df70>', None, None]
+2026-05-08 10:38:51,914 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', 'customer_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 3) evidence_scope=[]
+2026-05-08 10:38:51,915 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None]
+2026-05-08 10:38:51,915 [INFO ]  [QUERY TRACE][expectation] feature_scope=[2] inverted_features=[False] evidence_scope=[] relevant_scope=[2] ranges_shape=(1, 3)
+2026-05-08 10:38:51,915 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None]
+2026-05-08 10:38:51,915 [INFO ]  [QUERY TRACE][evaluate_query] factors_count=8 cardinalities_shape=None
+2026-05-08 10:38:51,915 [DEBUG]  		computed prototypical cardinality in 0.0074633341282606125 secs.
+2026-05-08 10:38:51,915 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'd_year>=1992'), ('dwdate', 'd_year<=1997'), ('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=['dwdate.d_year'] ranges_shape=(6, 12) evidence_scope=[3]
+2026-05-08 10:38:51,915 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9ddf0>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,915 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[3] relevant_scope=[3, 11] ranges_shape=(6, 12)
+2026-05-08 10:38:51,916 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9ddf0>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,919 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_region='ASIA'"), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=['supplier.s_city'] ranges_shape=(5, 5) evidence_scope=[2]
+2026-05-08 10:38:51,919 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fd9dc70>', None, None]
+2026-05-08 10:38:51,919 [INFO ]  [QUERY TRACE][expectation] feature_scope=[4] inverted_features=[False] evidence_scope=[2] relevant_scope=[2, 4] ranges_shape=(5, 5)
+2026-05-08 10:38:51,919 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fd9dc70>', None, None]
+2026-05-08 10:38:51,920 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', "c_region='ASIA'"), ('customer', 'customer_nn IS NOT NULL')] group_by_columns=['customer.c_city'] ranges_shape=(5, 3) evidence_scope=[0]
+2026-05-08 10:38:51,920 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d556670>', None, None]
+2026-05-08 10:38:51,920 [INFO ]  [QUERY TRACE][expectation] feature_scope=[2] inverted_features=[False] evidence_scope=[0] relevant_scope=[0, 2] ranges_shape=(5, 3)
+2026-05-08 10:38:51,920 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a8d556670>', None, None]
+2026-05-08 10:38:51,921 [DEBUG]  		computed all cardinalities in 0.006018911954015493 secs.
+2026-05-08 10:38:51,921 [DEBUG]  		average_cardinality: 1654.286478090906
+2026-05-08 10:38:51,921 [INFO ]  [QUERY TRACE][evaluate_query] expectation_spn_tables=['lineorder'] expectation= * E(lineorder.lo_revenue| lineorder.lineorder_nn IS NOT NULL)
+2026-05-08 10:38:51,921 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=['customer.c_city', 'supplier.s_city', 'dwdate.d_year'] ranges_shape=(150, 10) evidence_scope=[]
+2026-05-08 10:38:51,922 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,922 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[] relevant_scope=[] ranges_shape=(150, 10)
+2026-05-08 10:38:51,922 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,922 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[] relevant_scope=[6] ranges_shape=(150, 10)
+2026-05-08 10:38:51,922 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,941 [DEBUG]  		computed expectation in 0.019712642300873995 secs.
+2026-05-08 10:38:51,941 [DEBUG]  		average expectation: 2910345.662671833 for [('lineorder', 'lo_revenue')]
+2026-05-08 10:38:51,941 [INFO ]  		total_time:                     0.047433014027774334 secs
+2026-05-08 10:38:51,944 [INFO ]  		total_bins:                     150
+2026-05-08 10:38:51,944 [INFO ]  		bin_completeness:               inf%
+2026-05-08 10:38:51,944 [INFO ]  		average_relative_error:         inf%
+2026-05-08 10:38:51,944 [INFO ]  		false_bin_percentage:           inf%
+2026-05-08 10:38:51,944 [INFO ]  Evaluating AQP query 7: SELECT SUM(lo_revenue)  FROM customer, lineorder, supplier, dwdate WHERE lo_custkey = c_custkey AND lo_suppkey = s_suppkey AND lo_orderdate = d_datekey AND c_nation = 'UNITED STATES' AND s_nation = 'UNITED STATES' AND d_year >= 1992 AND d_year <= 1997 GROUP BY c_city, s_city, d_year ;
+2026-05-08 10:38:51,947 [INFO ]  [QUERY TRACE][parse_query] sql=SELECT SUM(lo_revenue)  FROM customer, lineorder, supplier, dwdate WHERE lo_custkey = c_custkey AND lo_suppkey = s_suppkey AND lo_orderdate = d_datekey AND c_nation = 'UNITED STATES' AND s_nation = 'UNITED STATES' AND d_year >= 1992 AND d_year <= 1997 GROUP BY c_city, s_city, d_year ;
+2026-05-08 10:38:51,948 [INFO ]  [QUERY TRACE][parse_query] query_type=AQP tables=['customer', 'dwdate', 'lineorder', 'supplier'] joins=['lineorder.lo_custkey = customer.c_custkey', 'lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('customer', 'c_city'), ('supplier', 's_city'), ('dwdate', 'd_year')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])]
+2026-05-08 10:38:51,948 [INFO ]  [QUERY TRACE][parse_query] where={'customer': ["c_nation='UNITED STATES'"], 'supplier': ["s_nation='UNITED STATES'"], 'dwdate': ['d_year>=1992', 'd_year<=1997']}
+2026-05-08 10:38:51,948 [INFO ]  [QUERY TRACE][evaluate_query] query_type=AQP tables=['customer', 'dwdate', 'lineorder', 'supplier'] joins=['lineorder.lo_custkey = customer.c_custkey', 'lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('customer', 'c_city'), ('supplier', 's_city'), ('dwdate', 'd_year')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])] where={'customer': ["c_nation='UNITED STATES'"], 'supplier': ["s_nation='UNITED STATES'"], 'dwdate': ['d_year>=1992', 'd_year<=1997']}
+2026-05-08 10:38:51,948 [INFO ]  [QUERY TRACE][group_by_dispatch] requested_group_bys=['customer.c_city', 'supplier.s_city', 'dwdate.d_year']
+2026-05-08 10:38:51,948 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['customer'] assigned_group_bys=['customer.c_city']
+2026-05-08 10:38:51,948 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['supplier'] assigned_group_bys=['supplier.s_city']
+2026-05-08 10:38:51,948 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['dwdate'] assigned_group_bys=['dwdate.d_year']
+2026-05-08 10:38:51,948 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['customer.c_city'] raw_conditions=[('customer', "c_nation='UNITED STATES'"), ('customer', 'customer_nn IS NOT NULL')]
+2026-05-08 10:38:51,948 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', "c_nation='UNITED STATES'"), ('customer', 'customer_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 3) evidence_scope=[0]
+2026-05-08 10:38:51,948 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fe13940>', None, None]
+2026-05-08 10:38:51,948 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[0] feature_scope_columns=['customer.c_city']
+2026-05-08 10:38:51,948 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[0] evidence_scope=[0] relevant_scope=[0] evidence_shape=(1, 3)
+2026-05-08 10:38:51,952 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=10 sample_grouped_tuples=[(191,), (188,), (139,), (221,), (88,)]
+2026-05-08 10:38:51,952 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['customer.c_city'] total_groups=10 sample_raw_groups=[(242,), (225,), (219,), (88,), (191,)] sample_translated_groups=[('UNITED ST6',), ('UNITED ST9',), ('UNITED ST8',), ('UNITED ST1',), ('UNITED ST0',)]
+2026-05-08 10:38:51,952 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['supplier.s_city'] raw_conditions=[('supplier', "s_nation='UNITED STATES'"), ('supplier', 'supplier_nn IS NOT NULL')]
+2026-05-08 10:38:51,953 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_nation='UNITED STATES'"), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 5) evidence_scope=[2]
+2026-05-08 10:38:51,953 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fe13340>', None, None]
+2026-05-08 10:38:51,953 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[2] feature_scope_columns=['supplier.s_city']
+2026-05-08 10:38:51,953 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[2] evidence_scope=[2] relevant_scope=[2] evidence_shape=(1, 5)
+2026-05-08 10:38:51,956 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=10 sample_grouped_tuples=[(153,), (191,), (75,), (229,), (207,)]
+2026-05-08 10:38:51,957 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['supplier.s_city'] total_groups=10 sample_raw_groups=[(75,), (10,), (229,), (153,), (45,)] sample_translated_groups=[('UNITED ST6',), ('UNITED ST9',), ('UNITED ST8',), ('UNITED ST1',), ('UNITED ST0',)]
+2026-05-08 10:38:51,957 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['dwdate.d_year'] raw_conditions=[('dwdate', 'd_year>=1992'), ('dwdate', 'd_year<=1997'), ('dwdate', 'dwdate_nn IS NOT NULL')]
+2026-05-08 10:38:51,957 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'd_year>=1992'), ('dwdate', 'd_year<=1997'), ('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[3]
+2026-05-08 10:38:51,957 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8d556790>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,957 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[3] feature_scope_columns=['dwdate.d_year']
+2026-05-08 10:38:51,957 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[3] evidence_scope=[3] relevant_scope=[3] evidence_shape=(1, 12)
+2026-05-08 10:38:51,960 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=6 sample_grouped_tuples=[(1997.0,), (1992.0,), (1995.0,), (1996.0,), (1993.0,)]
+2026-05-08 10:38:51,960 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['dwdate.d_year'] total_groups=6 sample_raw_groups=[(1992.0,), (1995.0,), (1994.0,), (1997.0,), (1996.0,)] sample_translated_groups=[(1992.0,), (1995.0,), (1994.0,), (1997.0,), (1996.0,)]
+2026-05-08 10:38:51,962 [INFO ]  [QUERY TRACE][group_by_dispatch] group_scopes=['customer.c_city', 'supplier.s_city', 'dwdate.d_year'] total_group_candidates=600 sample_groups=[('UNITED ST6', 'UNITED ST6', 1992.0), ('UNITED ST6', 'UNITED ST6', 1995.0), ('UNITED ST6', 'UNITED ST6', 1994.0), ('UNITED ST6', 'UNITED ST6', 1997.0), ('UNITED ST6', 'UNITED ST6', 1996.0)]
+2026-05-08 10:38:51,962 [INFO ]  [QUERY TRACE][evaluate_query] technical_group_by_scopes=[('customer', 'c_city'), ('supplier', 's_city'), ('dwdate', 'd_year')] sample_result_tuples=[('UNITED ST6', 'UNITED ST6', 1992.0), ('UNITED ST6', 'UNITED ST6', 1995.0), ('UNITED ST6', 'UNITED ST6', 1994.0), ('UNITED ST6', 'UNITED ST6', 1997.0), ('UNITED ST6', 'UNITED ST6', 1996.0)]
+2026-05-08 10:38:51,962 [DEBUG]  		computed 600 group by statements in 0.013893618248403072 secs.
+2026-05-08 10:38:51,962 [INFO ]  [QUERY TRACE][evaluate_query] artificially_added_conditions=[('customer', 'c_city=UNITED ST6'), ('supplier', 's_city=UNITED ST6'), ('dwdate', 'd_year=1992.0')]
+2026-05-08 10:38:51,963 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_nation='UNITED STATES'"), ('supplier', 's_city=UNITED ST6'), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 5) evidence_scope=[2]
+2026-05-08 10:38:51,963 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a79718a30>', None, None]
+2026-05-08 10:38:51,963 [INFO ]  [QUERY TRACE][expectation] feature_scope=[4] inverted_features=[False] evidence_scope=[2] relevant_scope=[2, 4] ranges_shape=(1, 5)
+2026-05-08 10:38:51,963 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a79718a30>', None, None]
+2026-05-08 10:38:51,965 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', "c_nation='UNITED STATES'"), ('customer', 'c_city=UNITED ST6'), ('customer', 'customer_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 3) evidence_scope=[0]
+2026-05-08 10:38:51,965 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a79718640>', None, None]
+2026-05-08 10:38:51,965 [INFO ]  [QUERY TRACE][expectation] feature_scope=[2] inverted_features=[False] evidence_scope=[0] relevant_scope=[0, 2] ranges_shape=(1, 3)
+2026-05-08 10:38:51,965 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a79718640>', None, None]
+2026-05-08 10:38:51,967 [INFO ]  [QUERY TRACE][evaluate_query] factors_count=8 cardinalities_shape=None
+2026-05-08 10:38:51,967 [DEBUG]  		computed prototypical cardinality in 0.005239126738160849 secs.
+2026-05-08 10:38:51,968 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'd_year>=1992'), ('dwdate', 'd_year<=1997'), ('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=['dwdate.d_year'] ranges_shape=(6, 12) evidence_scope=[3]
+2026-05-08 10:38:51,968 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9de50>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,968 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[3] relevant_scope=[3, 11] ranges_shape=(6, 12)
+2026-05-08 10:38:51,968 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fd9de50>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,971 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_nation='UNITED STATES'"), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=['supplier.s_city'] ranges_shape=(10, 5) evidence_scope=[2]
+2026-05-08 10:38:51,972 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fd9df10>', None, None]
+2026-05-08 10:38:51,972 [INFO ]  [QUERY TRACE][expectation] feature_scope=[4] inverted_features=[False] evidence_scope=[2] relevant_scope=[2, 4] ranges_shape=(10, 5)
+2026-05-08 10:38:51,972 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fd9df10>', None, None]
+2026-05-08 10:38:51,973 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', "c_nation='UNITED STATES'"), ('customer', 'customer_nn IS NOT NULL')] group_by_columns=['customer.c_city'] ranges_shape=(10, 3) evidence_scope=[0]
+2026-05-08 10:38:51,973 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fe13a30>', None, None]
+2026-05-08 10:38:51,973 [INFO ]  [QUERY TRACE][expectation] feature_scope=[2] inverted_features=[False] evidence_scope=[0] relevant_scope=[0, 2] ranges_shape=(10, 3)
+2026-05-08 10:38:51,973 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fe13a30>', None, None]
+2026-05-08 10:38:51,974 [DEBUG]  		computed all cardinalities in 0.007054081652313471 secs.
+2026-05-08 10:38:51,974 [DEBUG]  		average_cardinality: 14.388617006839473
+2026-05-08 10:38:51,974 [INFO ]  [QUERY TRACE][evaluate_query] expectation_spn_tables=['lineorder'] expectation= * E(lineorder.lo_revenue| lineorder.lineorder_nn IS NOT NULL)
+2026-05-08 10:38:51,975 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=['customer.c_city', 'supplier.s_city', 'dwdate.d_year'] ranges_shape=(600, 10) evidence_scope=[]
+2026-05-08 10:38:51,975 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,975 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[] relevant_scope=[] ranges_shape=(600, 10)
+2026-05-08 10:38:51,975 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:51,975 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[] relevant_scope=[6] ranges_shape=(600, 10)
+2026-05-08 10:38:51,975 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,086 [DEBUG]  		computed expectation in 0.11124126194044948 secs.
+2026-05-08 10:38:52,086 [DEBUG]  		average expectation: 2910345.662671833 for [('lineorder', 'lo_revenue')]
+2026-05-08 10:38:52,087 [INFO ]  		total_time:                     0.13884150190278888 secs
+2026-05-08 10:38:52,185 [INFO ]  		total_bins:                     599
+2026-05-08 10:38:52,185 [INFO ]  		bin_completeness:               inf%
+2026-05-08 10:38:52,185 [INFO ]  		average_relative_error:         inf%
+2026-05-08 10:38:52,185 [INFO ]  		false_bin_percentage:           inf%
+2026-05-08 10:38:52,185 [INFO ]  Evaluating AQP query 8: SELECT SUM(lo_revenue)  FROM customer, lineorder, supplier, dwdate WHERE lo_custkey = c_custkey AND lo_suppkey = s_suppkey AND lo_orderdate = d_datekey AND c_city IN ('UNITED KI1', 'UNITED KI5') AND s_city IN ('UNITED KI1', 'UNITED KI5') AND d_year >= 1992 AND d_year <= 1997 GROUP BY c_city, s_city, d_year;
+2026-05-08 10:38:52,190 [INFO ]  [QUERY TRACE][parse_query] sql=SELECT SUM(lo_revenue)  FROM customer, lineorder, supplier, dwdate WHERE lo_custkey = c_custkey AND lo_suppkey = s_suppkey AND lo_orderdate = d_datekey AND c_city IN ('UNITED KI1', 'UNITED KI5') AND s_city IN ('UNITED KI1', 'UNITED KI5') AND d_year >= 1992 AND d_year <= 1997 GROUP BY c_city, s_city, d_year;
+2026-05-08 10:38:52,190 [INFO ]  [QUERY TRACE][parse_query] query_type=AQP tables=['customer', 'dwdate', 'lineorder', 'supplier'] joins=['lineorder.lo_custkey = customer.c_custkey', 'lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('customer', 'c_city'), ('supplier', 's_city'), ('dwdate', 'd_year')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])]
+2026-05-08 10:38:52,190 [INFO ]  [QUERY TRACE][parse_query] where={'customer': ["c_city IN ('UNITED KI1', 'UNITED KI5')"], 'supplier': ["s_city IN ('UNITED KI1', 'UNITED KI5')"], 'dwdate': ['d_year>=1992', 'd_year<=1997']}
+2026-05-08 10:38:52,191 [INFO ]  [QUERY TRACE][evaluate_query] query_type=AQP tables=['customer', 'dwdate', 'lineorder', 'supplier'] joins=['lineorder.lo_custkey = customer.c_custkey', 'lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('customer', 'c_city'), ('supplier', 's_city'), ('dwdate', 'd_year')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])] where={'customer': ["c_city IN ('UNITED KI1', 'UNITED KI5')"], 'supplier': ["s_city IN ('UNITED KI1', 'UNITED KI5')"], 'dwdate': ['d_year>=1992', 'd_year<=1997']}
+2026-05-08 10:38:52,191 [INFO ]  [QUERY TRACE][group_by_dispatch] requested_group_bys=['customer.c_city', 'supplier.s_city', 'dwdate.d_year']
+2026-05-08 10:38:52,191 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['customer'] assigned_group_bys=['customer.c_city']
+2026-05-08 10:38:52,191 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['supplier'] assigned_group_bys=['supplier.s_city']
+2026-05-08 10:38:52,191 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['dwdate'] assigned_group_bys=['dwdate.d_year']
+2026-05-08 10:38:52,191 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['customer.c_city'] raw_conditions=[('customer', "c_city IN ('UNITED KI1', 'UNITED KI5')"), ('customer', 'customer_nn IS NOT NULL')]
+2026-05-08 10:38:52,191 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', "c_city IN ('UNITED KI1', 'UNITED KI5')"), ('customer', 'customer_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 3) evidence_scope=[0]
+2026-05-08 10:38:52,191 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fe13fa0>', None, None]
+2026-05-08 10:38:52,191 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[0] feature_scope_columns=['customer.c_city']
+2026-05-08 10:38:52,191 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[0] evidence_scope=[0] relevant_scope=[0] evidence_shape=(1, 3)
+2026-05-08 10:38:52,195 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=2 sample_grouped_tuples=[(124,), (203,)]
+2026-05-08 10:38:52,195 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['customer.c_city'] total_groups=2 sample_raw_groups=[(124,), (203,)] sample_translated_groups=[('UNITED KI1',), ('UNITED KI5',)]
+2026-05-08 10:38:52,195 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['supplier.s_city'] raw_conditions=[('supplier', "s_city IN ('UNITED KI1', 'UNITED KI5')"), ('supplier', 'supplier_nn IS NOT NULL')]
+2026-05-08 10:38:52,195 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_city IN ('UNITED KI1', 'UNITED KI5')"), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 5) evidence_scope=[2]
+2026-05-08 10:38:52,195 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fe13d30>', None, None]
+2026-05-08 10:38:52,196 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[2] feature_scope_columns=['supplier.s_city']
+2026-05-08 10:38:52,196 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[2] evidence_scope=[2] relevant_scope=[2] evidence_shape=(1, 5)
+2026-05-08 10:38:52,199 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=2 sample_grouped_tuples=[(192,), (115,)]
+2026-05-08 10:38:52,200 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['supplier.s_city'] total_groups=2 sample_raw_groups=[(115,), (192,)] sample_translated_groups=[('UNITED KI1',), ('UNITED KI5',)]
+2026-05-08 10:38:52,200 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['dwdate.d_year'] raw_conditions=[('dwdate', 'd_year>=1992'), ('dwdate', 'd_year<=1997'), ('dwdate', 'dwdate_nn IS NOT NULL')]
+2026-05-08 10:38:52,200 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'd_year>=1992'), ('dwdate', 'd_year<=1997'), ('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[3]
+2026-05-08 10:38:52,200 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fe136a0>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,200 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[3] feature_scope_columns=['dwdate.d_year']
+2026-05-08 10:38:52,200 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[3] evidence_scope=[3] relevant_scope=[3] evidence_shape=(1, 12)
+2026-05-08 10:38:52,203 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=6 sample_grouped_tuples=[(1997.0,), (1992.0,), (1995.0,), (1996.0,), (1993.0,)]
+2026-05-08 10:38:52,203 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['dwdate.d_year'] total_groups=6 sample_raw_groups=[(1992.0,), (1995.0,), (1994.0,), (1997.0,), (1996.0,)] sample_translated_groups=[(1992.0,), (1995.0,), (1994.0,), (1997.0,), (1996.0,)]
+2026-05-08 10:38:52,203 [INFO ]  [QUERY TRACE][group_by_dispatch] group_scopes=['customer.c_city', 'supplier.s_city', 'dwdate.d_year'] total_group_candidates=24 sample_groups=[('UNITED KI1', 'UNITED KI1', 1992.0), ('UNITED KI1', 'UNITED KI1', 1995.0), ('UNITED KI1', 'UNITED KI1', 1994.0), ('UNITED KI1', 'UNITED KI1', 1997.0), ('UNITED KI1', 'UNITED KI1', 1996.0)]
+2026-05-08 10:38:52,203 [INFO ]  [QUERY TRACE][evaluate_query] technical_group_by_scopes=[('customer', 'c_city'), ('supplier', 's_city'), ('dwdate', 'd_year')] sample_result_tuples=[('UNITED KI1', 'UNITED KI1', 1992.0), ('UNITED KI1', 'UNITED KI1', 1995.0), ('UNITED KI1', 'UNITED KI1', 1994.0), ('UNITED KI1', 'UNITED KI1', 1997.0), ('UNITED KI1', 'UNITED KI1', 1996.0)]
+2026-05-08 10:38:52,203 [DEBUG]  		computed 24 group by statements in 0.012255312409251928 secs.
+2026-05-08 10:38:52,203 [INFO ]  [QUERY TRACE][evaluate_query] artificially_added_conditions=[('customer', 'c_city=UNITED KI1'), ('supplier', 's_city=UNITED KI1'), ('dwdate', 'd_year=1992.0')]
+2026-05-08 10:38:52,204 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_city IN ('UNITED KI1', 'UNITED KI5')"), ('supplier', 's_city=UNITED KI1'), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 5) evidence_scope=[2]
+2026-05-08 10:38:52,204 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fdb92e0>', None, None]
+2026-05-08 10:38:52,204 [INFO ]  [QUERY TRACE][expectation] feature_scope=[4] inverted_features=[False] evidence_scope=[2] relevant_scope=[2, 4] ranges_shape=(1, 5)
+2026-05-08 10:38:52,204 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fdb92e0>', None, None]
+2026-05-08 10:38:52,206 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', "c_city IN ('UNITED KI1', 'UNITED KI5')"), ('customer', 'c_city=UNITED KI1'), ('customer', 'customer_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 3) evidence_scope=[0]
+2026-05-08 10:38:52,206 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fdb9970>', None, None]
+2026-05-08 10:38:52,206 [INFO ]  [QUERY TRACE][expectation] feature_scope=[2] inverted_features=[False] evidence_scope=[0] relevant_scope=[0, 2] ranges_shape=(1, 3)
+2026-05-08 10:38:52,206 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fdb9970>', None, None]
+2026-05-08 10:38:52,208 [INFO ]  [QUERY TRACE][evaluate_query] factors_count=8 cardinalities_shape=None
+2026-05-08 10:38:52,208 [DEBUG]  		computed prototypical cardinality in 0.004843404050916433 secs.
+2026-05-08 10:38:52,208 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'd_year>=1992'), ('dwdate', 'd_year<=1997'), ('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=['dwdate.d_year'] ranges_shape=(6, 12) evidence_scope=[3]
+2026-05-08 10:38:52,208 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fdb9ee0>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,208 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[3] relevant_scope=[3, 11] ranges_shape=(6, 12)
+2026-05-08 10:38:52,208 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a8fdb9ee0>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,211 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_city IN ('UNITED KI1', 'UNITED KI5')"), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=['supplier.s_city'] ranges_shape=(2, 5) evidence_scope=[2]
+2026-05-08 10:38:52,211 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fdb96a0>', None, None]
+2026-05-08 10:38:52,211 [INFO ]  [QUERY TRACE][expectation] feature_scope=[4] inverted_features=[False] evidence_scope=[2] relevant_scope=[2, 4] ranges_shape=(2, 5)
+2026-05-08 10:38:52,211 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fdb96a0>', None, None]
+2026-05-08 10:38:52,212 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', "c_city IN ('UNITED KI1', 'UNITED KI5')"), ('customer', 'customer_nn IS NOT NULL')] group_by_columns=['customer.c_city'] ranges_shape=(2, 3) evidence_scope=[0]
+2026-05-08 10:38:52,212 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fdb9940>', None, None]
+2026-05-08 10:38:52,212 [INFO ]  [QUERY TRACE][expectation] feature_scope=[2] inverted_features=[False] evidence_scope=[0] relevant_scope=[0, 2] ranges_shape=(2, 3)
+2026-05-08 10:38:52,212 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fdb9940>', None, None]
+2026-05-08 10:38:52,212 [DEBUG]  		computed all cardinalities in 0.004410931374877691 secs.
+2026-05-08 10:38:52,213 [DEBUG]  		average_cardinality: 12.514554032147919
+2026-05-08 10:38:52,213 [INFO ]  [QUERY TRACE][evaluate_query] expectation_spn_tables=['lineorder'] expectation= * E(lineorder.lo_revenue| lineorder.lineorder_nn IS NOT NULL)
+2026-05-08 10:38:52,213 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=['customer.c_city', 'supplier.s_city', 'dwdate.d_year'] ranges_shape=(24, 10) evidence_scope=[]
+2026-05-08 10:38:52,213 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,213 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[] relevant_scope=[] ranges_shape=(24, 10)
+2026-05-08 10:38:52,213 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,213 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[] relevant_scope=[6] ranges_shape=(24, 10)
+2026-05-08 10:38:52,213 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,219 [DEBUG]  		computed expectation in 0.006264043040573597 secs.
+2026-05-08 10:38:52,219 [DEBUG]  		average expectation: 2910345.6626718324 for [('lineorder', 'lo_revenue')]
+2026-05-08 10:38:52,219 [INFO ]  		total_time:                     0.028589047025889158 secs
+2026-05-08 10:38:52,219 [INFO ]  		total_bins:                     24
+2026-05-08 10:38:52,219 [INFO ]  		bin_completeness:               inf%
+2026-05-08 10:38:52,219 [INFO ]  		average_relative_error:         inf%
+2026-05-08 10:38:52,219 [INFO ]  		false_bin_percentage:           inf%
+2026-05-08 10:38:52,220 [INFO ]  Evaluating AQP query 9: SELECT SUM(lo_revenue)  FROM customer, lineorder, supplier, dwdate WHERE lo_custkey = c_custkey AND lo_suppkey = s_suppkey AND lo_orderdate = d_datekey AND c_city IN ('UNITED KI1', 'UNITED KI5') AND s_city IN ('UNITED KI1', 'UNITED KI5') AND d_yearmonth = 'Dec1997' GROUP BY c_city, s_city, d_year;
+2026-05-08 10:38:52,223 [INFO ]  [QUERY TRACE][parse_query] sql=SELECT SUM(lo_revenue)  FROM customer, lineorder, supplier, dwdate WHERE lo_custkey = c_custkey AND lo_suppkey = s_suppkey AND lo_orderdate = d_datekey AND c_city IN ('UNITED KI1', 'UNITED KI5') AND s_city IN ('UNITED KI1', 'UNITED KI5') AND d_yearmonth = 'Dec1997' GROUP BY c_city, s_city, d_year;
+2026-05-08 10:38:52,223 [INFO ]  [QUERY TRACE][parse_query] query_type=AQP tables=['customer', 'dwdate', 'lineorder', 'supplier'] joins=['lineorder.lo_custkey = customer.c_custkey', 'lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('customer', 'c_city'), ('supplier', 's_city'), ('dwdate', 'd_year')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])]
+2026-05-08 10:38:52,223 [INFO ]  [QUERY TRACE][parse_query] where={'customer': ["c_city IN ('UNITED KI1', 'UNITED KI5')"], 'supplier': ["s_city IN ('UNITED KI1', 'UNITED KI5')"], 'dwdate': ["d_yearmonth='Dec1997'"]}
+2026-05-08 10:38:52,223 [INFO ]  [QUERY TRACE][evaluate_query] query_type=AQP tables=['customer', 'dwdate', 'lineorder', 'supplier'] joins=['lineorder.lo_custkey = customer.c_custkey', 'lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('customer', 'c_city'), ('supplier', 's_city'), ('dwdate', 'd_year')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])] where={'customer': ["c_city IN ('UNITED KI1', 'UNITED KI5')"], 'supplier': ["s_city IN ('UNITED KI1', 'UNITED KI5')"], 'dwdate': ["d_yearmonth='Dec1997'"]}
+2026-05-08 10:38:52,223 [INFO ]  [QUERY TRACE][group_by_dispatch] requested_group_bys=['customer.c_city', 'supplier.s_city', 'dwdate.d_year']
+2026-05-08 10:38:52,223 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['customer'] assigned_group_bys=['customer.c_city']
+2026-05-08 10:38:52,223 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['supplier'] assigned_group_bys=['supplier.s_city']
+2026-05-08 10:38:52,223 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['dwdate'] assigned_group_bys=['dwdate.d_year']
+2026-05-08 10:38:52,223 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['customer.c_city'] raw_conditions=[('customer', "c_city IN ('UNITED KI1', 'UNITED KI5')"), ('customer', 'customer_nn IS NOT NULL')]
+2026-05-08 10:38:52,223 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', "c_city IN ('UNITED KI1', 'UNITED KI5')"), ('customer', 'customer_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 3) evidence_scope=[0]
+2026-05-08 10:38:52,223 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fd9dcd0>', None, None]
+2026-05-08 10:38:52,224 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[0] feature_scope_columns=['customer.c_city']
+2026-05-08 10:38:52,224 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[0] evidence_scope=[0] relevant_scope=[0] evidence_shape=(1, 3)
+2026-05-08 10:38:52,228 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=2 sample_grouped_tuples=[(124,), (203,)]
+2026-05-08 10:38:52,228 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['customer.c_city'] total_groups=2 sample_raw_groups=[(124,), (203,)] sample_translated_groups=[('UNITED KI1',), ('UNITED KI5',)]
+2026-05-08 10:38:52,228 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['supplier.s_city'] raw_conditions=[('supplier', "s_city IN ('UNITED KI1', 'UNITED KI5')"), ('supplier', 'supplier_nn IS NOT NULL')]
+2026-05-08 10:38:52,228 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_city IN ('UNITED KI1', 'UNITED KI5')"), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 5) evidence_scope=[2]
+2026-05-08 10:38:52,228 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fdb9b50>', None, None]
+2026-05-08 10:38:52,228 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[2] feature_scope_columns=['supplier.s_city']
+2026-05-08 10:38:52,228 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[2] evidence_scope=[2] relevant_scope=[2] evidence_shape=(1, 5)
+2026-05-08 10:38:52,232 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=2 sample_grouped_tuples=[(192,), (115,)]
+2026-05-08 10:38:52,232 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['supplier.s_city'] total_groups=2 sample_raw_groups=[(115,), (192,)] sample_translated_groups=[('UNITED KI1',), ('UNITED KI5',)]
+2026-05-08 10:38:52,232 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['dwdate.d_year'] raw_conditions=[('dwdate', "d_yearmonth='Dec1997'"), ('dwdate', 'dwdate_nn IS NOT NULL')]
+2026-05-08 10:38:52,233 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', "d_yearmonth='Dec1997'"), ('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[5]
+2026-05-08 10:38:52,233 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a8fdb96a0>', None, None, None, None, None, None]
+2026-05-08 10:38:52,233 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[3] feature_scope_columns=['dwdate.d_year']
+2026-05-08 10:38:52,233 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[3] evidence_scope=[3, 5] relevant_scope=[3, 5] evidence_shape=(1, 12)
+2026-05-08 10:38:52,245 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=1 sample_grouped_tuples=[(1997.0, 72)]
+2026-05-08 10:38:52,245 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['dwdate.d_year'] total_groups=1 sample_raw_groups=[(1997.0,)] sample_translated_groups=[(1997.0,)]
+2026-05-08 10:38:52,245 [INFO ]  [QUERY TRACE][group_by_dispatch] group_scopes=['customer.c_city', 'supplier.s_city', 'dwdate.d_year'] total_group_candidates=4 sample_groups=[('UNITED KI1', 'UNITED KI1', 1997.0), ('UNITED KI1', 'UNITED KI5', 1997.0), ('UNITED KI5', 'UNITED KI1', 1997.0), ('UNITED KI5', 'UNITED KI5', 1997.0)]
+2026-05-08 10:38:52,246 [INFO ]  [QUERY TRACE][evaluate_query] technical_group_by_scopes=[('customer', 'c_city'), ('supplier', 's_city'), ('dwdate', 'd_year')] sample_result_tuples=[('UNITED KI1', 'UNITED KI1', 1997.0), ('UNITED KI1', 'UNITED KI5', 1997.0), ('UNITED KI5', 'UNITED KI1', 1997.0), ('UNITED KI5', 'UNITED KI5', 1997.0)]
+2026-05-08 10:38:52,246 [DEBUG]  		computed 4 group by statements in 0.022453660145401955 secs.
+2026-05-08 10:38:52,246 [INFO ]  [QUERY TRACE][evaluate_query] artificially_added_conditions=[('customer', 'c_city=UNITED KI1'), ('supplier', 's_city=UNITED KI1'), ('dwdate', 'd_year=1997.0')]
+2026-05-08 10:38:52,246 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', "d_yearmonth='Dec1997'"), ('dwdate', 'd_year=1997.0'), ('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[3, 5]
+2026-05-08 10:38:52,246 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a42bee460>', None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee910>', None, None, None, None, None, None]
+2026-05-08 10:38:52,247 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[3, 5] relevant_scope=[3, 5, 11] ranges_shape=(1, 12)
+2026-05-08 10:38:52,247 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a42bee460>', None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee910>', None, None, None, None, None, None]
+expectation result: 0.052692051897000006
+expectation result: 356.5405623540142
+expectation result: 2349.888150175988
+[6001173.0, 0.052692051897000006, 356.5405623540142, 0.0004255521693341481] 47978.09625991818 6001173.0 *  * E(1* 1_{lineorder.lo_discount>1 Λ lineorder.lo_discount<3 Λ lineorder.lo_quantity<25 Λ lineorder.lineorder_nn IS NOT NULL}) *  * E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.d_year=1993 Λ dwdate.dwdate_nn IS NOT NULL}) *  / E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.dwdate_nn IS NOT NULL})
+expectation result: 0.052692051897000006
+expectation result: 130318.96373663915
+expectation result: 0.011601454150000003
+expectation result: 30.281527213628603
+[6001173.0, 0.011601454150000003, 30.281527213628603, 0.0004255521693341481] 897.1791204375747 6001173.0 *  * E(1* 1_{lineorder.lo_discount>4 Λ lineorder.lo_discount<6 Λ lineorder.lo_quantity>26 Λ lineorder.lo_quantity<35 Λ lineorder.lineorder_nn IS NOT NULL}) *  * E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.d_yearmonthnum=199401 Λ dwdate.dwdate_nn IS NOT NULL}) *  / E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.dwdate_nn IS NOT NULL})
+expectation result: 0.011601454150000003
+expectation result: 266087.8789024049
+expectation result: 0.011672199396000003
+expectation result: 6.8377642095290385
+[6001173.0, 0.011672199396000003, 6.8377642095290385, 0.0004255521693341481] 203.82421299601702 6001173.0 *  * E(1* 1_{lineorder.lo_discount>5 Λ lineorder.lo_discount<7 Λ lineorder.lo_quantity>26 Λ lineorder.lo_quantity<35 Λ lineorder.lineorder_nn IS NOT NULL}) *  * E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.d_weeknuminyear=6 Λ dwdate.d_year=1994 Λ dwdate.dwdate_nn IS NOT NULL}) *  / E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.dwdate_nn IS NOT NULL})
+expectation result: 0.011672199396000003
+expectation result: 321252.5677472154
+expectation result: 358.4942092710225
+expectation result: 566.7455
+expectation result: 3000.5865000000003
+expectation result: 0.029865000000000003
+expectation result: 30.005865
+[2557.0, 358.4942092710225, 1.0, 1.0, 566.7455, 0.00033326817940425974, 0.029865000000000003, 0.03332681794042598] 172.3261441073774 2557.0 *  * E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.d_year=1992.0 Λ dwdate.dwdate_nn IS NOT NULL}) *  * E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  / E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  * E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.s_region='AMERICA' Λ supplier.supplier_nn IS NOT NULL}) *  / E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.supplier_nn IS NOT NULL}) *  * E(part.mul_lineorder.lo_partkey* 1_{part.p_category='MFGR#12' Λ part.p_brand1=MFGR#1228 Λ part.part_nn IS NOT NULL}) *  / E(part.mul_lineorder.lo_partkey* 1_{part.part_nn IS NOT NULL})
+aqp_result[0]: (1992.0, 'MFGR#1228', 498886824.4836356)
+true_result[0]: (Decimal('427246622'),)
+expectation result: 673.7134999999998
+expectation result: 0.029470000000000003
+[2557.0, 358.4942092710225, 1.0, 1.0, 673.7134999999998, 0.00033326817940425974, 0.029470000000000003, 0.03332681794042598] 202.141720000788 2557.0 *  * E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.d_year=1992.0 Λ dwdate.dwdate_nn IS NOT NULL}) *  * E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  / E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  * E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.s_region='ASIA' Λ supplier.supplier_nn IS NOT NULL}) *  / E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.supplier_nn IS NOT NULL}) *  * E(part.mul_lineorder.lo_partkey* 1_{part.p_brand1='MFGR#2221' Λ part.p_brand1=MFGR#2221 Λ part.part_nn IS NOT NULL}) *  / E(part.mul_lineorder.lo_partkey* 1_{part.part_nn IS NOT NULL})
+expectation result: 0.029470000000000003
+aqp_result[0]: (1992.0, 'MFGR#2221', 588302278.0493174)
+true_result[0]: (Decimal('561928209'),)
+expectation result: 570.1255
+expectation result: 0.032845
+[2557.0, 358.4942092710225, 1.0, 1.0, 570.1255, 0.00033326817940425974, 0.032845, 0.03332681794042598] 190.65153369640677 2557.0 *  * E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.d_year=1992.0 Λ dwdate.dwdate_nn IS NOT NULL}) *  * E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  / E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  * E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.s_region='EUROPE' Λ supplier.supplier_nn IS NOT NULL}) *  / E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.supplier_nn IS NOT NULL}) *  * E(part.mul_lineorder.lo_partkey* 1_{part.p_brand1='MFGR#2239' Λ part.p_brand1=MFGR#2239 Λ part.part_nn IS NOT NULL}) *  / E(part.mul_lineorder.lo_partkey* 1_{part.part_nn IS NOT NULL})
+expectation result: 0.032845
+aqp_result[0]: (1992.0, 'MFGR#2239', 554861864.1750702)
+true_result[0]: (Decimal('616783833'),)
+expectation result: 358.4942092710225
+expectation result: 141.91049999999998
+expectation result: 8.217366666666667
+expectation result: 200.03910000000002
+[2557.0, 358.4942092710225, 1.0, 1.0, 141.91049999999998, 0.00033326817940425974, 8.217366666666667, 0.004999022691063897] 1780.8979184215189 2557.0 *  * E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.d_year>=1992 Λ dwdate.d_year<=1997 Λ dwdate.d_year=1992.0 Λ dwdate.dwdate_nn IS NOT NULL}) *  * E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  / E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  * E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.s_region='ASIA' Λ supplier.s_nation=INDONESIA Λ supplier.supplier_nn IS NOT NULL}) *  / E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.supplier_nn IS NOT NULL}) *  * E(customer.mul_lineorder.lo_custkey* 1_{customer.c_region='ASIA' Λ customer.c_nation=INDONESIA Λ customer.customer_nn IS NOT NULL}) *  / E(customer.mul_lineorder.lo_custkey* 1_{customer.customer_nn IS NOT NULL})
+aqp_result[0]: ('INDONESIA', 'INDONESIA', 1992.0, 5300626914.724819)
+true_result[0]: (Decimal('5201645725'),)
+expectation result: 8.9925
+expectation result: 0.8831999999999999
+[2557.0, 358.4942092710225, 1.0, 1.0, 8.9925, 0.00033326817940425974, 0.8831999999999999, 0.004999022691063897] 12.129177089034462 2557.0 *  * E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.d_year>=1992 Λ dwdate.d_year<=1997 Λ dwdate.d_year=1992.0 Λ dwdate.dwdate_nn IS NOT NULL}) *  * E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  / E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  * E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.s_nation='UNITED STATES' Λ supplier.s_city=UNITED ST6 Λ supplier.supplier_nn IS NOT NULL}) *  / E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.supplier_nn IS NOT NULL}) *  * E(customer.mul_lineorder.lo_custkey* 1_{customer.c_nation='UNITED STATES' Λ customer.c_city=UNITED ST6 Λ customer.customer_nn IS NOT NULL}) *  / E(customer.mul_lineorder.lo_custkey* 1_{customer.customer_nn IS NOT NULL})
+aqp_result[0]: ('UNITED ST6', 'UNITED ST6', 1992.0, 36438745.18584942)
+true_result[0]: (Decimal('61210295'),)
+expectation result: 13.4025
+expectation result: 0.7953666666666666
+[2557.0, 358.4942092710225, 1.0, 1.0, 13.4025, 0.00033326817940425974, 0.7953666666666666, 0.004999022691063897] 16.279648811290297 2557.0 *  * E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.d_year>=1992 Λ dwdate.d_year<=1997 Λ dwdate.d_year=1992.0 Λ dwdate.dwdate_nn IS NOT NULL}) *  * E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  / E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  * E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.s_city IN ('UNITED KI1', 'UNITED KI5') Λ supplier.s_city=UNITED KI1 Λ supplier.supplier_nn IS NOT NULL}) *  / E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.supplier_nn IS NOT NULL}) *  * E(customer.mul_lineorder.lo_custkey* 1_{customer.c_city IN ('UNITED KI1', 'UNITED KI5') Λ customer.c_city=UNITED KI1 Λ customer.customer_nn IS NOT NULL}) *  / E(customer.mul_lineorder.lo_custkey* 1_{customer.customer_nn IS NOT NULL})
+aqp_result[0]: ('UNITED KI1', 'UNITED KI1', 1992.0, 50153804.00312746)
+true_result[0]: (Decimal('40492785'),)
+expectation result: 30.24267716849778
+[2557.0, 30.24267716849778, 1.0, 1.0, 13.4025, 0.00033326817940425974, 0.7953666666666666, 0.004999022691063897] 1.3733559725204956 2026-05-08 10:38:52,252 [INFO ]  [QUERY TRACE][evaluate_query] factors_count=8 cardinalities_shape=None
+2026-05-08 10:38:52,252 [DEBUG]  		computed prototypical cardinality in 0.006441848818212748 secs.
+2026-05-08 10:38:52,252 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', "d_yearmonth='Dec1997'"), ('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=['dwdate.d_year'] ranges_shape=(1, 12) evidence_scope=[3, 5]
+2026-05-08 10:38:52,252 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a42beedc0>', None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee9d0>', None, None, None, None, None, None]
+2026-05-08 10:38:52,253 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[3, 5] relevant_scope=[3, 5, 11] ranges_shape=(1, 12)
+2026-05-08 10:38:52,253 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a42beedc0>', None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee9d0>', None, None, None, None, None, None]
+2026-05-08 10:38:52,258 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_city IN ('UNITED KI1', 'UNITED KI5')"), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=['supplier.s_city'] ranges_shape=(2, 5) evidence_scope=[2]
+2026-05-08 10:38:52,258 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee0d0>', None, None]
+2026-05-08 10:38:52,258 [INFO ]  [QUERY TRACE][expectation] feature_scope=[4] inverted_features=[False] evidence_scope=[2] relevant_scope=[2, 4] ranges_shape=(2, 5)
+2026-05-08 10:38:52,258 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee0d0>', None, None]
+2026-05-08 10:38:52,259 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', "c_city IN ('UNITED KI1', 'UNITED KI5')"), ('customer', 'customer_nn IS NOT NULL')] group_by_columns=['customer.c_city'] ranges_shape=(2, 3) evidence_scope=[0]
+2026-05-08 10:38:52,259 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee340>', None, None]
+2026-05-08 10:38:52,259 [INFO ]  [QUERY TRACE][expectation] feature_scope=[2] inverted_features=[False] evidence_scope=[0] relevant_scope=[0, 2] ranges_shape=(2, 3)
+2026-05-08 10:38:52,259 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee340>', None, None]
+2026-05-08 10:38:52,259 [DEBUG]  		computed all cardinalities in 0.006921451073139906 secs.
+2026-05-08 10:38:52,259 [DEBUG]  		average_cardinality: 1.0605878322376003
+2026-05-08 10:38:52,259 [INFO ]  [QUERY TRACE][evaluate_query] expectation_spn_tables=['lineorder'] expectation= * E(lineorder.lo_revenue| lineorder.lineorder_nn IS NOT NULL)
+2026-05-08 10:38:52,259 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=['customer.c_city', 'supplier.s_city', 'dwdate.d_year'] ranges_shape=(4, 10) evidence_scope=[]
+2026-05-08 10:38:52,260 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,260 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[] relevant_scope=[] ranges_shape=(4, 10)
+2026-05-08 10:38:52,260 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,260 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[] relevant_scope=[6] ranges_shape=(4, 10)
+2026-05-08 10:38:52,260 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,263 [DEBUG]  		computed expectation in 0.004066064953804016 secs.
+2026-05-08 10:38:52,264 [DEBUG]  		average expectation: 2910345.6626718324 for [('lineorder', 'lo_revenue')]
+2026-05-08 10:38:52,264 [INFO ]  		total_time:                     0.04059688514098525 secs
+2026-05-08 10:38:52,264 [INFO ]  		total_bins:                     3
+2026-05-08 10:38:52,264 [INFO ]  		bin_completeness:               inf%
+2026-05-08 10:38:52,264 [INFO ]  		average_relative_error:         inf%
+2026-05-08 10:38:52,264 [INFO ]  		false_bin_percentage:           inf%
+2026-05-08 10:38:52,264 [INFO ]  Evaluating AQP query 10: SELECT SUM(lo_revenue)  FROM dwdate, customer, supplier, part, lineorder WHERE lo_custkey = c_custkey AND lo_suppkey = s_suppkey AND lo_partkey = p_partkey AND lo_orderdate = d_datekey AND c_region = 'AMERICA' AND s_region = 'AMERICA' GROUP BY d_year, c_nation ORDER BY d_year, c_nation;
+2026-05-08 10:38:52,267 [INFO ]  [QUERY TRACE][parse_query] sql=SELECT SUM(lo_revenue)  FROM dwdate, customer, supplier, part, lineorder WHERE lo_custkey = c_custkey AND lo_suppkey = s_suppkey AND lo_partkey = p_partkey AND lo_orderdate = d_datekey AND c_region = 'AMERICA' AND s_region = 'AMERICA' GROUP BY d_year, c_nation ORDER BY d_year, c_nation;
+2026-05-08 10:38:52,267 [INFO ]  [QUERY TRACE][parse_query] query_type=AQP tables=['customer', 'dwdate', 'lineorder', 'part', 'supplier'] joins=['lineorder.lo_custkey = customer.c_custkey', 'lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_partkey = part.p_partkey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('dwdate', 'd_year'), ('customer', 'c_nation')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])]
+2026-05-08 10:38:52,267 [INFO ]  [QUERY TRACE][parse_query] where={'customer': ["c_region='AMERICA'"], 'supplier': ["s_region='AMERICA'"]}
+2026-05-08 10:38:52,267 [INFO ]  [QUERY TRACE][evaluate_query] query_type=AQP tables=['customer', 'dwdate', 'lineorder', 'part', 'supplier'] joins=['lineorder.lo_custkey = customer.c_custkey', 'lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_partkey = part.p_partkey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('dwdate', 'd_year'), ('customer', 'c_nation')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])] where={'customer': ["c_region='AMERICA'"], 'supplier': ["s_region='AMERICA'"]}
+2026-05-08 10:38:52,267 [INFO ]  [QUERY TRACE][group_by_dispatch] requested_group_bys=['dwdate.d_year', 'customer.c_nation']
+2026-05-08 10:38:52,267 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['dwdate'] assigned_group_bys=['dwdate.d_year']
+2026-05-08 10:38:52,267 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['customer'] assigned_group_bys=['customer.c_nation']
+2026-05-08 10:38:52,268 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['dwdate.d_year'] raw_conditions=[('dwdate', 'dwdate_nn IS NOT NULL')]
+2026-05-08 10:38:52,268 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[]
+2026-05-08 10:38:52,268 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,268 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[3] feature_scope_columns=['dwdate.d_year']
+2026-05-08 10:38:52,268 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[3] evidence_scope=[3] relevant_scope=[3] evidence_shape=(1, 12)
+2026-05-08 10:38:52,270 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=7 sample_grouped_tuples=[(1997.0,), (1992.0,), (1998.0,), (1995.0,), (1996.0,)]
+2026-05-08 10:38:52,270 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['dwdate.d_year'] total_groups=7 sample_raw_groups=[(1992.0,), (1998.0,), (1995.0,), (1994.0,), (1997.0,)] sample_translated_groups=[(1992.0,), (1998.0,), (1995.0,), (1994.0,), (1997.0,)]
+2026-05-08 10:38:52,270 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['customer.c_nation'] raw_conditions=[('customer', "c_region='AMERICA'"), ('customer', 'customer_nn IS NOT NULL')]
+2026-05-08 10:38:52,271 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', "c_region='AMERICA'"), ('customer', 'customer_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 3) evidence_scope=[0]
+2026-05-08 10:38:52,271 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee220>', None, None]
+2026-05-08 10:38:52,271 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[0] feature_scope_columns=['customer.c_city']
+2026-05-08 10:38:52,271 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[0] evidence_scope=[0] relevant_scope=[0] evidence_shape=(1, 3)
+2026-05-08 10:38:52,275 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=50 sample_grouped_tuples=[(51,), (182,), (127,), (5,), (191,)]
+2026-05-08 10:38:52,275 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['customer.c_city'] total_groups=5 sample_raw_groups=[([182, 78, 210, 57, 249, 17, 34, 229, 180, 228],), ([191, 188, 221, 88, 225, 234, 179, 139, 242, 219],), ([51, 102, 31, 217, 241, 8, 187, 92, 76, 30],), ([5, 93, 190, 13, 22, 243, 26, 35, 108, 189],), ([127, 14, 184, 80, 49, 220, 107, 3, 134, 158],)] sample_translated_groups=[('BRAZIL',), ('UNITED STATES',), ('PERU',), ('CANADA',), ('ARGENTINA',)]
+2026-05-08 10:38:52,275 [INFO ]  [QUERY TRACE][group_by_dispatch] group_scopes=['dwdate.d_year', 'customer.c_city'] total_group_candidates=35 sample_groups=[(1992.0, 'BRAZIL'), (1992.0, 'UNITED STATES'), (1992.0, 'PERU'), (1992.0, 'CANADA'), (1992.0, 'ARGENTINA')]
+2026-05-08 10:38:52,275 [INFO ]  [QUERY TRACE][evaluate_query] technical_group_by_scopes=[('dwdate', 'd_year'), ('customer', 'c_city')] sample_result_tuples=[(1992.0, 'BRAZIL'), (1992.0, 'UNITED STATES'), (1992.0, 'PERU'), (1992.0, 'CANADA'), (1992.0, 'ARGENTINA')]
+2026-05-08 10:38:52,275 [DEBUG]  		computed 35 group by statements in 0.008082317188382149 secs.
+2026-05-08 10:38:52,276 [INFO ]  [QUERY TRACE][evaluate_query] artificially_added_conditions=[('dwdate', 'd_year=1992.0'), ('customer', 'c_nation=BRAZIL')]
+2026-05-08 10:38:52,276 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', "c_region='AMERICA'"), ('customer', 'c_nation=BRAZIL'), ('customer', 'customer_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 3) evidence_scope=[0]
+2026-05-08 10:38:52,276 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee850>', None, None]
+2026-05-08 10:38:52,277 [INFO ]  [QUERY TRACE][expectation] feature_scope=[2] inverted_features=[False] evidence_scope=[0] relevant_scope=[0, 2] ranges_shape=(1, 3)
+2026-05-08 10:38:52,277 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee850>', None, None]
+2026-05-08 10:38:52,279 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', 'part_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 7) evidence_scope=[]
+2026-05-08 10:38:52,279 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None]
+2026-05-08 10:38:52,279 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[] relevant_scope=[6] ranges_shape=(1, 7)
+2026-05-08 10:38:52,279 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None]
+2026-05-08 10:38:52,279 [INFO ]  [QUERY TRACE][evaluate_query] factors_count=10 cardinalities_shape=None
+2026-05-08 10:38:52,279 [DEBUG]  		computed prototypical cardinality in 0.003728778101503849 secs.
+2026-05-08 10:38:52,280 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=['dwdate.d_year'] ranges_shape=(7, 12) evidence_scope=[3]
+2026-05-08 10:38:52,280 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a42beea60>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,280 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[3] relevant_scope=[3, 11] ranges_shape=(7, 12)
+2026-05-08 10:38:52,280 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a42beea60>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,283 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', "c_region='AMERICA'"), ('customer', 'customer_nn IS NOT NULL')] group_by_columns=['customer.c_city'] ranges_shape=(5, 3) evidence_scope=[0]
+2026-05-08 10:38:52,283 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a42beeb20>', None, None]
+2026-05-08 10:38:52,283 [INFO ]  [QUERY TRACE][expectation] feature_scope=[2] inverted_features=[False] evidence_scope=[0] relevant_scope=[0, 2] ranges_shape=(5, 3)
+2026-05-08 10:38:52,283 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a42beeb20>', None, None]
+2026-05-08 10:38:52,284 [DEBUG]  		computed all cardinalities in 0.004315159749239683 secs.
+2026-05-08 10:38:52,284 [DEBUG]  		average_cardinality: 6438.403410012106
+2026-05-08 10:38:52,284 [INFO ]  [QUERY TRACE][evaluate_query] expectation_spn_tables=['lineorder'] expectation= * E(lineorder.lo_revenue| lineorder.lineorder_nn IS NOT NULL)
+2026-05-08 10:38:52,284 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=['dwdate.d_year', 'customer.c_city'] ranges_shape=(35, 10) evidence_scope=[]
+2026-05-08 10:38:52,284 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,284 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[] relevant_scope=[] ranges_shape=(35, 10)
+2026-05-08 10:38:52,284 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,284 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[] relevant_scope=[6] ranges_shape=(35, 10)
+2026-05-08 10:38:52,284 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,292 [DEBUG]  		computed expectation in 0.007667888887226582 secs.
+2026-05-08 10:38:52,292 [DEBUG]  		average expectation: 2910345.6626718324 for [('lineorder', 'lo_revenue')]
+2026-05-08 10:38:52,292 [INFO ]  		total_time:                     0.02457871800288558 secs
+2026-05-08 10:38:52,292 [INFO ]  		total_bins:                     35
+2026-05-08 10:38:52,292 [INFO ]  		bin_completeness:               inf%
+2026-05-08 10:38:52,292 [INFO ]  		average_relative_error:         inf%
+2026-05-08 10:38:52,292 [INFO ]  		false_bin_percentage:           inf%
+2026-05-08 10:38:52,292 [INFO ]  Evaluating AQP query 11: SELECT SUM(lo_revenue)  FROM dwdate, customer, supplier, part, lineorder WHERE lo_custkey = c_custkey	AND lo_suppkey	=	s_suppkey	AND lo_partkey	=	p_partkey	AND lo_orderdate	=	d_datekey	AND c_region	=	'AMERICA'	AND s_region	=	'AMERICA' GROUP BY d_year, s_nation, p_category ORDER BY d_year, s_nation, p_category;
+2026-05-08 10:38:52,296 [INFO ]  [QUERY TRACE][parse_query] sql=SELECT SUM(lo_revenue)  FROM dwdate, customer, supplier, part, lineorder WHERE lo_custkey = c_custkey	AND lo_suppkey	=	s_suppkey	AND lo_partkey	=	p_partkey	AND lo_orderdate	=	d_datekey	AND c_region	=	'AMERICA'	AND s_region	=	'AMERICA' GROUP BY d_year, s_nation, p_category ORDER BY d_year, s_nation, p_category;
+2026-05-08 10:38:52,296 [INFO ]  [QUERY TRACE][parse_query] query_type=AQP tables=['customer', 'dwdate', 'lineorder', 'part', 'supplier'] joins=['lineorder.lo_custkey = customer.c_custkey', 'lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_partkey = part.p_partkey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('dwdate', 'd_year'), ('supplier', 's_nation'), ('part', 'p_category')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])]
+2026-05-08 10:38:52,296 [INFO ]  [QUERY TRACE][parse_query] where={'customer': ["c_region='AMERICA'"], 'supplier': ["s_region='AMERICA'"]}
+2026-05-08 10:38:52,296 [INFO ]  [QUERY TRACE][evaluate_query] query_type=AQP tables=['customer', 'dwdate', 'lineorder', 'part', 'supplier'] joins=['lineorder.lo_custkey = customer.c_custkey', 'lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_partkey = part.p_partkey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('dwdate', 'd_year'), ('supplier', 's_nation'), ('part', 'p_category')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])] where={'customer': ["c_region='AMERICA'"], 'supplier': ["s_region='AMERICA'"]}
+2026-05-08 10:38:52,296 [INFO ]  [QUERY TRACE][group_by_dispatch] requested_group_bys=['dwdate.d_year', 'supplier.s_nation', 'part.p_category']
+2026-05-08 10:38:52,296 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['dwdate'] assigned_group_bys=['dwdate.d_year']
+2026-05-08 10:38:52,296 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['supplier'] assigned_group_bys=['supplier.s_nation']
+2026-05-08 10:38:52,296 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['part'] assigned_group_bys=['part.p_category']
+2026-05-08 10:38:52,296 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['dwdate.d_year'] raw_conditions=[('dwdate', 'dwdate_nn IS NOT NULL')]
+2026-05-08 10:38:52,296 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[]
+2026-05-08 10:38:52,296 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,296 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[3] feature_scope_columns=['dwdate.d_year']
+2026-05-08 10:38:52,296 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[3] evidence_scope=[3] relevant_scope=[3] evidence_shape=(1, 12)
+2026-05-08 10:38:52,299 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=7 sample_grouped_tuples=[(1997.0,), (1992.0,), (1998.0,), (1995.0,), (1996.0,)]
+2026-05-08 10:38:52,299 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['dwdate.d_year'] total_groups=7 sample_raw_groups=[(1992.0,), (1998.0,), (1995.0,), (1994.0,), (1997.0,)] sample_translated_groups=[(1992.0,), (1998.0,), (1995.0,), (1994.0,), (1997.0,)]
+2026-05-08 10:38:52,299 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['supplier.s_nation'] raw_conditions=[('supplier', "s_region='AMERICA'"), ('supplier', 'supplier_nn IS NOT NULL')]
+2026-05-08 10:38:52,299 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_region='AMERICA'"), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 5) evidence_scope=[2]
+2026-05-08 10:38:52,299 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee0d0>', None, None]
+2026-05-08 10:38:52,299 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[2] feature_scope_columns=['supplier.s_city']
+2026-05-08 10:38:52,300 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[2] evidence_scope=[2] relevant_scope=[2] evidence_shape=(1, 5)
+2026-05-08 10:38:52,303 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=50 sample_grouped_tuples=[(237,), (191,), (142,), (20,), (29,)]
+2026-05-08 10:38:52,304 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['supplier.s_city'] total_groups=5 sample_raw_groups=[([175, 89, 141, 238, 247, 82, 146, 99, 21, 228],), ([191, 77, 153, 207, 48, 75, 10, 19, 229, 45],), ([56, 181, 199, 241, 170, 8, 209, 1, 219, 54],), ([142, 20, 221, 190, 13, 214, 121, 81, 187, 149],), ([237, 29, 157, 245, 135, 64, 231, 185, 3, 100],)] sample_translated_groups=[('BRAZIL',), ('UNITED STATES',), ('PERU',), ('CANADA',), ('ARGENTINA',)]
+2026-05-08 10:38:52,304 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['part.p_category'] raw_conditions=[('part', 'part_nn IS NOT NULL')]
+2026-05-08 10:38:52,304 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', 'part_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 7) evidence_scope=[]
+2026-05-08 10:38:52,304 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None]
+2026-05-08 10:38:52,304 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[1] feature_scope_columns=['part.p_brand1']
+2026-05-08 10:38:52,304 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[1] evidence_scope=[1] relevant_scope=[1] evidence_shape=(1, 7)
+2026-05-08 10:38:52,320 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=1000 sample_grouped_tuples=[(63,), (966,), (310,), (557,), (804,)]
+2026-05-08 10:38:52,323 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['part.p_brand1'] total_groups=25 sample_raw_groups=[([287, 570, 12, 509, 108, 193, 67, 453, 736, 983, 569, 70, 703, 806, 150, 657, 140, 516, 97, 604, 859, 157, 44, 942, 783, 742, 225, 629, 53, 66, 931, 530, 777, 767, 605, 335, 842, 729, 567, 45],), ([416, 615, 965, 574, 178, 698, 945, 963, 410, 637, 753, 730, 437, 553, 854, 669, 129, 147, 906, 16, 482, 462, 48, 411, 298, 10, 270, 759, 363, 520, 497, 744, 865, 83, 330, 451, 297, 333, 683, 27],), ([966, 138, 156, 686, 542, 519, 617, 877, 728, 72, 718, 438, 768, 130, 660, 200, 357, 198, 790, 412, 901, 775, 667, 626, 891, 848, 192, 434, 946, 447, 527, 172, 913, 247, 898, 646, 209, 837, 338, 832],), ([817, 264, 650, 25, 2, 463, 90, 764, 988, 350, 809, 233, 84, 748, 622, 190, 185, 450, 162, 821, 389, 402, 765, 616, 480, 578, 699, 982, 159, 136, 563, 288, 103, 404, 525, 199, 446, 994, 688, 719],), ([413, 655, 30, 146, 923, 226, 756, 239, 834, 317, 564, 173, 549, 647, 758, 241, 321, 571, 548, 422, 705, 314, 826, 3, 124, 937, 258, 397, 495, 984, 858, 681, 573, 33, 643, 757, 855, 976, 585, 845],)] sample_translated_groups=[('MFGR#35',), ('MFGR#21',), ('MFGR#24',), ('MFGR#43',), ('MFGR#32',)]
+2026-05-08 10:38:52,326 [INFO ]  [QUERY TRACE][group_by_dispatch] group_scopes=['dwdate.d_year', 'supplier.s_city', 'part.p_brand1'] total_group_candidates=875 sample_groups=[(1992.0, 'BRAZIL', 'MFGR#35'), (1992.0, 'BRAZIL', 'MFGR#21'), (1992.0, 'BRAZIL', 'MFGR#24'), (1992.0, 'BRAZIL', 'MFGR#43'), (1992.0, 'BRAZIL', 'MFGR#32')]
+2026-05-08 10:38:52,326 [INFO ]  [QUERY TRACE][evaluate_query] technical_group_by_scopes=[('dwdate', 'd_year'), ('supplier', 's_city'), ('part', 'p_brand1')] sample_result_tuples=[(1992.0, 'BRAZIL', 'MFGR#35'), (1992.0, 'BRAZIL', 'MFGR#21'), (1992.0, 'BRAZIL', 'MFGR#24'), (1992.0, 'BRAZIL', 'MFGR#43'), (1992.0, 'BRAZIL', 'MFGR#32')]
+2026-05-08 10:38:52,327 [DEBUG]  		computed 875 group by statements in 0.03043515421450138 secs.
+2026-05-08 10:38:52,327 [INFO ]  [QUERY TRACE][evaluate_query] artificially_added_conditions=[('dwdate', 'd_year=1992.0'), ('supplier', 's_nation=BRAZIL'), ('part', 'p_category=MFGR#35')]
+2026-05-08 10:38:52,327 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', 'p_category=MFGR#35'), ('part', 'part_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 7) evidence_scope=[1]
+2026-05-08 10:38:52,327 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42beefd0>', None, None, None, None, None]
+2026-05-08 10:38:52,328 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[1] relevant_scope=[1, 6] ranges_shape=(1, 7)
+2026-05-08 10:38:52,328 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42beefd0>', None, None, None, None, None]
+2026-05-08 10:38:52,331 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_region='AMERICA'"), ('supplier', 's_nation=BRAZIL'), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 5) evidence_scope=[2]
+2026-05-08 10:38:52,331 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee280>', None, None]
+2026-05-08 10:38:52,331 [INFO ]  [QUERY TRACE][expectation] feature_scope=[4] inverted_features=[False] evidence_scope=[2] relevant_scope=[2, 4] ranges_shape=(1, 5)
+2026-05-08 10:38:52,331 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee280>', None, None]
+2026-05-08 10:38:52,333 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('customer', "c_region='AMERICA'"), ('customer', 'customer_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 3) evidence_scope=[0]
+2026-05-08 10:38:52,333 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee910>', None, None]
+2026-05-08 10:38:52,333 [INFO ]  [QUERY TRACE][expectation] feature_scope=[2] inverted_features=[False] evidence_scope=[0] relevant_scope=[0, 2] ranges_shape=(1, 3)
+2026-05-08 10:38:52,333 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=['<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee910>', None, None]
+2026-05-08 10:38:52,337 [INFO ]  [QUERY TRACE][evaluate_query] factors_count=10 cardinalities_shape=None
+2026-05-08 10:38:52,337 [DEBUG]  		computed prototypical cardinality in 0.00997538585215807 secs.
+2026-05-08 10:38:52,337 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=['dwdate.d_year'] ranges_shape=(7, 12) evidence_scope=[3]
+2026-05-08 10:38:52,337 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a42beee80>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,337 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[3] relevant_scope=[3, 11] ranges_shape=(7, 12)
+2026-05-08 10:38:52,337 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a42beee80>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,344 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', 'part_nn IS NOT NULL')] group_by_columns=['part.p_brand1'] ranges_shape=(25, 7) evidence_scope=[1]
+2026-05-08 10:38:52,344 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee880>', None, None, None, None, None]
+2026-05-08 10:38:52,344 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[1] relevant_scope=[1, 6] ranges_shape=(25, 7)
+2026-05-08 10:38:52,344 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee880>', None, None, None, None, None]
+2026-05-08 10:38:52,354 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_region='AMERICA'"), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=['supplier.s_city'] ranges_shape=(5, 5) evidence_scope=[2]
+2026-05-08 10:38:52,354 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee640>', None, None]
+2026-05-08 10:38:52,354 [INFO ]  [QUERY TRACE][expectation] feature_scope=[4] inverted_features=[False] evidence_scope=[2] relevant_scope=[2, 4] ranges_shape=(5, 5)
+2026-05-08 10:38:52,354 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee640>', None, None]
+2026-05-08 10:38:52,356 [DEBUG]  		computed all cardinalities in 0.018927200231701136 secs.
+2026-05-08 10:38:52,356 [DEBUG]  		average_cardinality: 257.93928949513804
+2026-05-08 10:38:52,356 [INFO ]  [QUERY TRACE][evaluate_query] expectation_spn_tables=['lineorder'] expectation= * E(lineorder.lo_revenue| lineorder.lineorder_nn IS NOT NULL)
+2026-05-08 10:38:52,357 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=['dwdate.d_year', 'supplier.s_city', 'part.p_brand1'] ranges_shape=(875, 10) evidence_scope=[]
+2026-05-08 10:38:52,357 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,357 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[] relevant_scope=[] ranges_shape=(875, 10)
+2026-05-08 10:38:52,357 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,357 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[] relevant_scope=[6] ranges_shape=(875, 10)
+2026-05-08 10:38:52,357 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,513 [DEBUG]  		computed expectation in 0.1573205948807299 secs.
+2026-05-08 10:38:52,513 [DEBUG]  		average expectation: 2910345.662671833 for [('lineorder', 'lo_revenue')]
+2026-05-08 10:38:52,514 [INFO ]  		total_time:                     0.21846721693873405 secs
+2026-05-08 10:38:52,667 [INFO ]  		total_bins:                     875
+2026-05-08 10:38:52,667 [INFO ]  		bin_completeness:               inf%
+2026-05-08 10:38:52,667 [INFO ]  		average_relative_error:         inf%
+2026-05-08 10:38:52,667 [INFO ]  		false_bin_percentage:           inf%
+2026-05-08 10:38:52,667 [INFO ]  Evaluating AQP query 12: SELECT SUM(lo_revenue)  FROM dwdate, customer, supplier, part, lineorder WHERE lo_custkey	=	c_custkey	AND lo_suppkey	=	s_suppkey	AND lo_partkey	=	p_partkey	AND lo_orderdate	=	d_datekey	AND c_region	=	'AMERICA'	AND s_nation	=	'UNITED STATES'	AND	p_category	=	'MFGR#14' GROUP BY d_year, s_city, p_brand1 ORDER BY d_year, s_city, p_brand1;
+2026-05-08 10:38:52,671 [INFO ]  [QUERY TRACE][parse_query] sql=SELECT SUM(lo_revenue)  FROM dwdate, customer, supplier, part, lineorder WHERE lo_custkey	=	c_custkey	AND lo_suppkey	=	s_suppkey	AND lo_partkey	=	p_partkey	AND lo_orderdate	=	d_datekey	AND c_region	=	'AMERICA'	AND s_nation	=	'UNITED STATES'	AND	p_category	=	'MFGR#14' GROUP BY d_year, s_city, p_brand1 ORDER BY d_year, s_city, p_brand1;
+2026-05-08 10:38:52,671 [INFO ]  [QUERY TRACE][parse_query] query_type=AQP tables=['customer', 'dwdate', 'lineorder', 'part', 'supplier'] joins=['lineorder.lo_custkey = customer.c_custkey', 'lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_partkey = part.p_partkey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('dwdate', 'd_year'), ('supplier', 's_city'), ('part', 'p_brand1')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])]
+2026-05-08 10:38:52,671 [INFO ]  [QUERY TRACE][parse_query] where={'customer': ["c_region='AMERICA'"], 'supplier': ["s_nation='UNITED STATES'"], 'part': ["p_category='MFGR#14'"]}
+2026-05-08 10:38:52,671 [INFO ]  [QUERY TRACE][evaluate_query] query_type=AQP tables=['customer', 'dwdate', 'lineorder', 'part', 'supplier'] joins=['lineorder.lo_custkey = customer.c_custkey', 'lineorder.lo_orderdate = dwdate.d_datekey', 'lineorder.lo_partkey = part.p_partkey', 'lineorder.lo_suppkey = supplier.s_suppkey'] group_bys=[('dwdate', 'd_year'), ('supplier', 's_city'), ('part', 'p_brand1')] aggregations=[(<AggregationOperationType.AGGREGATION: 2>, <AggregationType.SUM: 0>, [('lineorder', 'lo_revenue')])] where={'customer': ["c_region='AMERICA'"], 'supplier': ["s_nation='UNITED STATES'"], 'part': ["p_category='MFGR#14'"]}
+2026-05-08 10:38:52,671 [INFO ]  [QUERY TRACE][group_by_dispatch] requested_group_bys=['dwdate.d_year', 'supplier.s_city', 'part.p_brand1']
+2026-05-08 10:38:52,671 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['dwdate'] assigned_group_bys=['dwdate.d_year']
+2026-05-08 10:38:52,671 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['supplier'] assigned_group_bys=['supplier.s_city']
+2026-05-08 10:38:52,671 [INFO ]  [QUERY TRACE][group_by_dispatch] spn_tables=['part'] assigned_group_bys=['part.p_brand1']
+2026-05-08 10:38:52,671 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['dwdate.d_year'] raw_conditions=[('dwdate', 'dwdate_nn IS NOT NULL')]
+2026-05-08 10:38:52,672 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 12) evidence_scope=[]
+2026-05-08 10:38:52,672 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,672 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[3] feature_scope_columns=['dwdate.d_year']
+2026-05-08 10:38:52,672 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[3] evidence_scope=[3] relevant_scope=[3] evidence_shape=(1, 12)
+2026-05-08 10:38:52,674 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=7 sample_grouped_tuples=[(1997.0,), (1992.0,), (1998.0,), (1995.0,), (1996.0,)]
+2026-05-08 10:38:52,674 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['dwdate.d_year'] total_groups=7 sample_raw_groups=[(1992.0,), (1998.0,), (1995.0,), (1994.0,), (1997.0,)] sample_translated_groups=[(1992.0,), (1998.0,), (1995.0,), (1994.0,), (1997.0,)]
+2026-05-08 10:38:52,674 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['supplier.s_city'] raw_conditions=[('supplier', "s_nation='UNITED STATES'"), ('supplier', 'supplier_nn IS NOT NULL')]
+2026-05-08 10:38:52,675 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_nation='UNITED STATES'"), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 5) evidence_scope=[2]
+2026-05-08 10:38:52,675 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee100>', None, None]
+2026-05-08 10:38:52,675 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[2] feature_scope_columns=['supplier.s_city']
+2026-05-08 10:38:52,675 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[2] evidence_scope=[2] relevant_scope=[2] evidence_shape=(1, 5)
+2026-05-08 10:38:52,679 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=10 sample_grouped_tuples=[(153,), (191,), (75,), (229,), (207,)]
+2026-05-08 10:38:52,679 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['supplier.s_city'] total_groups=10 sample_raw_groups=[(75,), (10,), (229,), (153,), (45,)] sample_translated_groups=[('UNITED ST6',), ('UNITED ST9',), ('UNITED ST8',), ('UNITED ST1',), ('UNITED ST0',)]
+2026-05-08 10:38:52,679 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] input_features=['part.p_brand1'] raw_conditions=[('part', "p_category='MFGR#14'"), ('part', 'part_nn IS NOT NULL')]
+2026-05-08 10:38:52,679 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', "p_category='MFGR#14'"), ('part', 'part_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 7) evidence_scope=[1]
+2026-05-08 10:38:52,679 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42beef10>', None, None, None, None, None]
+2026-05-08 10:38:52,679 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] feature_scope_indices=[1] feature_scope_columns=['part.p_brand1']
+2026-05-08 10:38:52,679 [INFO ]  [QUERY TRACE][group_by_combinations] feature_scope=[1] evidence_scope=[1] relevant_scope=[1] evidence_shape=(1, 7)
+2026-05-08 10:38:52,695 [INFO ]  [QUERY TRACE][group_by_combinations] grouped_tuple_count=40 sample_grouped_tuples=[(423,), (63,), (365,), (255,), (14,)]
+2026-05-08 10:38:52,695 [INFO ]  [QUERY TRACE][aqp_spn.evaluate_group_by_combinations] output_scope=['part.p_brand1'] total_groups=40 sample_raw_groups=[(841,), (546,), (649,), (964,), (752,)] sample_translated_groups=[('MFGR#1429',), ('MFGR#1435',), ('MFGR#142',), ('MFGR#1439',), ('MFGR#149',)]
+2026-05-08 10:38:52,704 [INFO ]  [QUERY TRACE][group_by_dispatch] group_scopes=['dwdate.d_year', 'supplier.s_city', 'part.p_brand1'] total_group_candidates=2800 sample_groups=[(1992.0, 'UNITED ST6', 'MFGR#1429'), (1992.0, 'UNITED ST6', 'MFGR#1435'), (1992.0, 'UNITED ST6', 'MFGR#142'), (1992.0, 'UNITED ST6', 'MFGR#1439'), (1992.0, 'UNITED ST6', 'MFGR#149')]
+2026-05-08 10:38:52,704 [INFO ]  [QUERY TRACE][evaluate_query] technical_group_by_scopes=[('dwdate', 'd_year'), ('supplier', 's_city'), ('part', 'p_brand1')] sample_result_tuples=[(1992.0, 'UNITED ST6', 'MFGR#1429'), (1992.0, 'UNITED ST6', 'MFGR#1435'), (1992.0, 'UNITED ST6', 'MFGR#142'), (1992.0, 'UNITED ST6', 'MFGR#1439'), (1992.0, 'UNITED ST6', 'MFGR#149')]
+2026-05-08 10:38:52,704 [DEBUG]  		computed 2800 group by statements in 0.03258325718343258 secs.
+2026-05-08 10:38:52,704 [INFO ]  [QUERY TRACE][evaluate_query] artificially_added_conditions=[('dwdate', 'd_year=1992.0'), ('supplier', 's_city=UNITED ST6'), ('part', 'p_brand1=MFGR#1429')]
+2026-05-08 10:38:52,705 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', "p_category='MFGR#14'"), ('part', 'p_brand1=MFGR#1429'), ('part', 'part_nn IS NOT NULL')] group_by_columns=None ranges_shape=(1, 7) evidence_scope=[1]
+2026-05-08 10:38:52,705 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee400>', None, None, None, None, None]
+2026-05-08 10:38:52,705 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[1] relevant_scope=[1, 6] ranges_shape=(1, 7)
+2026-05-08 10:38:52,705 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee400>', None, None, None, None, None]
+2026-05-08 10:38:52,706 [INFO ]  [QUERY TRACE][evaluate_query] factors_count=10 cardinalities_shape=None
+2026-05-08 10:38:52,706 [DEBUG]  		computed prototypical cardinality in 0.0019828197546303272 secs.
+2026-05-08 10:38:52,707 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('dwdate', 'dwdate_nn IS NOT NULL')] group_by_columns=['dwdate.d_year'] ranges_shape=(7, 12) evidence_scope=[3]
+2026-05-08 10:38:52,708 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a3b2c8a30>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,708 [INFO ]  [QUERY TRACE][expectation] feature_scope=[11] inverted_features=[False] evidence_scope=[3] relevant_scope=[3, 11] ranges_shape=(7, 12)
+2026-05-08 10:38:52,708 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, '<rspn.algorithms.ranges.NumericRange object at 0x7f4a3b2c8a30>', None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,715 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('part', "p_category='MFGR#14'"), ('part', 'part_nn IS NOT NULL')] group_by_columns=['part.p_brand1'] ranges_shape=(40, 7) evidence_scope=[1]
+2026-05-08 10:38:52,715 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee610>', None, None, None, None, None]
+2026-05-08 10:38:52,715 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[1] relevant_scope=[1, 6] ranges_shape=(40, 7)
+2026-05-08 10:38:52,715 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a42bee610>', None, None, None, None, None]
+2026-05-08 10:38:52,720 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('supplier', "s_nation='UNITED STATES'"), ('supplier', 'supplier_nn IS NOT NULL')] group_by_columns=['supplier.s_city'] ranges_shape=(10, 5) evidence_scope=[2]
+2026-05-08 10:38:52,720 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a80bfb4c0>', None, None]
+2026-05-08 10:38:52,720 [INFO ]  [QUERY TRACE][expectation] feature_scope=[4] inverted_features=[False] evidence_scope=[2] relevant_scope=[2, 4] ranges_shape=(10, 5)
+2026-05-08 10:38:52,720 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, '<rspn.algorithms.ranges.NominalRange object at 0x7f4a80bfb4c0>', None, None]
+2026-05-08 10:38:52,723 [DEBUG]  		computed all cardinalities in 0.017318107187747955 secs.
+2026-05-08 10:38:52,724 [DEBUG]  		average_cardinality: 0.6506364991905885
+2026-05-08 10:38:52,724 [INFO ]  [QUERY TRACE][evaluate_query] expectation_spn_tables=['lineorder'] expectation= * E(lineorder.lo_revenue| lineorder.lineorder_nn IS NOT NULL)
+2026-05-08 10:38:52,726 [INFO ]  [QUERY TRACE][aqp_spn._parse_conditions] conditions=[('lineorder', 'lineorder_nn IS NOT NULL')] group_by_columns=['dwdate.d_year', 'supplier.s_city', 'part.p_brand1'] ranges_shape=(2800, 10) evidence_scope=[]
+2026-05-08 10:38:52,726 [DEBUG]  [QUERY TRACE][aqp_spn._parse_conditions] first_row_ranges=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,726 [INFO ]  [QUERY TRACE][expectation] feature_scope=[] inverted_features=[] evidence_scope=[] relevant_scope=[] ranges_shape=(2800, 10)
+2026-05-08 10:38:52,726 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:52,726 [INFO ]  [QUERY TRACE][expectation] feature_scope=[6] inverted_features=[False] evidence_scope=[] relevant_scope=[6] ranges_shape=(2800, 10)
+2026-05-08 10:38:52,726 [DEBUG]  [QUERY TRACE][expectation] first_row_evidence=[None, None, None, None, None, None, None, None, None, None]
+2026-05-08 10:38:53,260 [DEBUG]  		computed expectation in 0.5359501694329083 secs.
+2026-05-08 10:38:53,260 [DEBUG]  		average expectation: 2910345.662671833 for [('lineorder', 'lo_revenue')]
+2026-05-08 10:38:53,263 [INFO ]  		total_time:                     0.5913810902275145 secs
+2026-05-08 10:38:53,789 [INFO ]  		total_bins:                     1304
+2026-05-08 10:38:53,789 [INFO ]  		bin_completeness:               inf%
+2026-05-08 10:38:53,789 [INFO ]  		average_relative_error:         inf%
+2026-05-08 10:38:53,789 [INFO ]  		false_bin_percentage:           inf%
+2026-05-08 10:38:53,789 [INFO ]  Saving results to ./ssb-benchmark/results/aqp_eval_uniform_compatible.csv
+2026-05-08 10:38:53,790 [INFO ]  
+2026-05-08 10:38:53,790 [INFO ]  ==========================================
+2026-05-08 10:38:53,790 [INFO ]  Evaluation Summary
+2026-05-08 10:38:53,790 [INFO ]  ==========================================
+2026-05-08 10:38:53,790 [INFO ]  Total Queries Evaluated: [92m13[0m
+2026-05-08 10:38:53,790 [INFO ]  Average Latency: [92m0.2437[0m secs
+2026-05-08 10:38:53,790 [INFO ]  Average Relative Error: [92m2.57%[0m
+2026-05-08 10:38:53,790 [INFO ]  Median Relative Error: [92m2.78%[0m
+2026-05-08 10:38:53,790 [INFO ]  ==========================================
+2557.0 *  * E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.d_yearmonth='Dec1997' Λ dwdate.d_year=1997.0 Λ dwdate.dwdate_nn IS NOT NULL}) *  * E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  / E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  * E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.s_city IN ('UNITED KI1', 'UNITED KI5') Λ supplier.s_city=UNITED KI1 Λ supplier.supplier_nn IS NOT NULL}) *  / E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.supplier_nn IS NOT NULL}) *  * E(customer.mul_lineorder.lo_custkey* 1_{customer.c_city IN ('UNITED KI1', 'UNITED KI5') Λ customer.c_city=UNITED KI1 Λ customer.customer_nn IS NOT NULL}) *  / E(customer.mul_lineorder.lo_custkey* 1_{customer.customer_nn IS NOT NULL})
+expectation result: 30.24267716849778
+aqp_result[0]: ('UNITED KI1', 'UNITED KI1', 1997.0, 4230989.689688411)
+true_result[0]: (Decimal('1870070'),)
+expectation result: 7.551966666666666
+expectation result: 30.005865
+[2557.0, 358.4942092710225, 1.0, 1.0, 566.7455, 0.00033326817940425974, 7.551966666666666, 0.004999022691063897, 30.005865, 0.03332681794042598] 6536.420372145205 2557.0 *  * E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.d_year=1992.0 Λ dwdate.dwdate_nn IS NOT NULL}) *  * E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  / E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  * E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.s_region='AMERICA' Λ supplier.supplier_nn IS NOT NULL}) *  / E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.supplier_nn IS NOT NULL}) *  * E(customer.mul_lineorder.lo_custkey* 1_{customer.c_region='AMERICA' Λ customer.c_nation=BRAZIL Λ customer.customer_nn IS NOT NULL}) *  / E(customer.mul_lineorder.lo_custkey* 1_{customer.customer_nn IS NOT NULL}) *  * E(part.mul_lineorder.lo_partkey* 1_{part.part_nn IS NOT NULL}) *  / E(part.mul_lineorder.lo_partkey* 1_{part.part_nn IS NOT NULL})
+aqp_result[0]: (1992.0, 'BRAZIL', 18871553822.3642)
+true_result[0]: (Decimal('19819576677'),)
+expectation result: 1.22174
+expectation result: 124.19949999999999
+expectation result: 39.756233333333334
+[2557.0, 358.4942092710225, 1.0, 1.0, 1.22174, 0.03332681794042598, 124.19949999999999, 0.00033326817940425974, 39.756233333333334, 0.004999022691063897] 307.03617732866525 2557.0 *  * E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.d_year=1992.0 Λ dwdate.dwdate_nn IS NOT NULL}) *  * E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  / E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  * E(part.mul_lineorder.lo_partkey* 1_{part.p_category=MFGR#35 Λ part.part_nn IS NOT NULL}) *  / E(part.mul_lineorder.lo_partkey* 1_{part.part_nn IS NOT NULL}) *  * E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.s_region='AMERICA' Λ supplier.s_nation=BRAZIL Λ supplier.supplier_nn IS NOT NULL}) *  / E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.supplier_nn IS NOT NULL}) *  * E(customer.mul_lineorder.lo_custkey* 1_{customer.c_region='AMERICA' Λ customer.customer_nn IS NOT NULL}) *  / E(customer.mul_lineorder.lo_custkey* 1_{customer.customer_nn IS NOT NULL})
+aqp_result[0]: (1992.0, 'BRAZIL', 'MFGR#35', 896416368.8232995)
+true_result[0]: (Decimal('767265331'),)
+expectation result: 0.030749999999999996
+[2557.0, 358.4942092710225, 1.0, 1.0, 0.030749999999999996, 0.03332681794042598, 8.9925, 0.00033326817940425974, 39.756233333333334, 0.004999022691063897] 0.5595211099492042 2557.0 *  * E(dwdate.mul_lineorder.lo_orderdate* 1_{dwdate.d_year=1992.0 Λ dwdate.dwdate_nn IS NOT NULL}) *  * E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  / E(1* 1_{lineorder.lineorder_nn IS NOT NULL}) *  * E(part.mul_lineorder.lo_partkey* 1_{part.p_category='MFGR#14' Λ part.p_brand1=MFGR#1429 Λ part.part_nn IS NOT NULL}) *  / E(part.mul_lineorder.lo_partkey* 1_{part.part_nn IS NOT NULL}) *  * E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.s_nation='UNITED STATES' Λ supplier.s_city=UNITED ST6 Λ supplier.supplier_nn IS NOT NULL}) *  / E(supplier.mul_lineorder.lo_suppkey* 1_{supplier.supplier_nn IS NOT NULL}) *  * E(customer.mul_lineorder.lo_custkey* 1_{customer.c_region='AMERICA' Λ customer.customer_nn IS NOT NULL}) *  / E(customer.mul_lineorder.lo_custkey* 1_{customer.customer_nn IS NOT NULL})
+aqp_result[0]: (1992.0, 'UNITED ST6', 'MFGR#1429', 1622782.9343892937)
+true_result[0]: (Decimal('7740212'),)

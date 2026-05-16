@@ -1,0 +1,1 @@
+SELECT distance, arr_delay, origin, dest, dep_delay, COUNT(*) FROM flights GROUP BY origin, dest, dep_delay, arr_delay, distance;
