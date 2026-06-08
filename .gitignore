@@ -13,6 +13,7 @@ airbnb-benchmark/
 appian-benchmark/
 flights-benchmark/
 imdb-benchmark/
+imdb-benchmark-1k/
 ssb-benchmark/
 
 benchmarks/**/ground_truth*.pkl
