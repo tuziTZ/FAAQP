@@ -1,4 +1,5 @@
 import copy
+import hashlib
 import logging
 import math
 import pickle
@@ -26,7 +27,7 @@ def prob_round(x):
 
 class JoinDataPreparator:
 
-    def __init__(self, meta_data_path, schema_graph, max_table_data=20000000, no_cache=True):
+    def __init__(self, meta_data_path, schema_graph, max_table_data=20000000, no_cache=True, sample_seed=None):
         self.meta_data_path = meta_data_path
         self.schema_graph = schema_graph
         with open(meta_data_path, 'rb') as handle:
@@ -34,6 +35,18 @@ class JoinDataPreparator:
         self.cached_tables = dict()
         self.max_table_data = max_table_data
         self.no_cache = no_cache
+        self.sample_seed = sample_seed
+        self._sample_context = None
+
+    def _sample_random_state(self, phase):
+        if self.sample_seed is None or self._sample_context is None:
+            return None
+        table_name, sample_size = self._sample_context
+        digest = hashlib.blake2b(
+            f"{int(self.sample_seed)}:{table_name}:{int(sample_size)}:{phase}".encode("utf-8"),
+            digest_size=4,
+        ).digest()
+        return int.from_bytes(digest, "little", signed=False)
 
     def _find_start_table(self, relationship_list, min_start_table_size):
         """
@@ -160,6 +173,10 @@ class JoinDataPreparator:
         if len(del_irr_attr) > 0:
             table_data = table_data.drop(columns=del_irr_attr)
 
+        row_id_column = table + '.__pbspn_row_id'
+        if row_id_column in table_data.columns:
+            table_data = table_data.drop(columns=[row_id_column])
+
         if not self.no_cache:
             self.cached_tables[path] = table_data
 
@@ -253,23 +270,49 @@ class JoinDataPreparator:
         # Sampling of join necessary
         if sample_size_estimate > sample_size:
             sample_rate = min(sample_size / sample_size_estimate * post_sampling_factor, 1.0)
-            df_full_samples, meta_types, null_values = self.generate_join_sample(
-                single_table=single_table, relationship_list=relationship_list,
-                min_start_table_size=min_start_table_size, sample_rate=sample_rate,
-                drop_redundant_columns=drop_redundant_columns)
+            old_context = self._sample_context
+            self._sample_context = (single_table or "join", sample_size)
+            try:
+                df_full_samples, meta_types, null_values = self.generate_join_sample(
+                    single_table=single_table, relationship_list=relationship_list,
+                    min_start_table_size=min_start_table_size, sample_rate=sample_rate,
+                    drop_redundant_columns=drop_redundant_columns)
+            finally:
+                self._sample_context = old_context
 
             if len(df_full_samples) > sample_size:
-                df_full_samples = df_full_samples.sample(sample_size)
+                old_context = self._sample_context
+                self._sample_context = (single_table or "join", sample_size)
+                try:
+                    df_full_samples = df_full_samples.sample(
+                        sample_size,
+                        random_state=self._sample_random_state("final"),
+                    )
+                finally:
+                    self._sample_context = old_context
             return df_full_samples, meta_types, null_values, full_join_size
 
         # No sampling required
-        df_full_samples, meta_types, null_values = self.generate_join_sample(single_table=single_table,
-                                                                             relationship_list=relationship_list,
-                                                                             min_start_table_size=min_start_table_size,
-                                                                             sample_rate=1.0,
-                                                                             drop_redundant_columns=drop_redundant_columns)
+        old_context = self._sample_context
+        self._sample_context = (single_table or "join", sample_size)
+        try:
+            df_full_samples, meta_types, null_values = self.generate_join_sample(single_table=single_table,
+                                                                                 relationship_list=relationship_list,
+                                                                                 min_start_table_size=min_start_table_size,
+                                                                                 sample_rate=1.0,
+                                                                                 drop_redundant_columns=drop_redundant_columns)
+        finally:
+            self._sample_context = old_context
         if len(df_full_samples) > sample_size:
-            return df_full_samples.sample(sample_size), meta_types, null_values, full_join_size
+            old_context = self._sample_context
+            self._sample_context = (single_table or "join", sample_size)
+            try:
+                return df_full_samples.sample(
+                    sample_size,
+                    random_state=self._sample_random_state("final"),
+                ), meta_types, null_values, full_join_size
+            finally:
+                self._sample_context = old_context
         return df_full_samples, meta_types, null_values, full_join_size
 
     def generate_n_samples_with_incremental_part(self, sample_size, post_sampling_factor=30, single_table=None, relationship_list=None,
@@ -342,7 +385,10 @@ class JoinDataPreparator:
 
             df_samples = self._get_table_data(self.table_meta_data[single_table]['hdf_path'], single_table)
             if sample_rate < 1:
-                df_samples = df_samples.sample(prob_round(len(df_samples) * sample_rate))
+                df_samples = df_samples.sample(
+                    prob_round(len(df_samples) * sample_rate),
+                    random_state=self._sample_random_state("presample"),
+                )
 
             # remove unnecessary multipliers and replace nans
             del_mul_attributes = []
@@ -355,7 +401,9 @@ class JoinDataPreparator:
                         relationship_obj.end + '.' + relationship_obj.multiplier_attribute_name_nn)
                     mul_columns.append(relationship_obj.end + '.' + relationship_obj.multiplier_attribute_name)
             if drop_redundant_columns:
-                df_samples = df_samples.drop(columns=del_mul_attributes)
+                existing = [column for column in del_mul_attributes if column in df_samples.columns]
+                if existing:
+                    df_samples = df_samples.drop(columns=existing)
 
             # remove unnecessary id field
             table_obj = self.schema_graph.table_dictionary[single_table]

@@ -5,9 +5,18 @@ from ensemble_compilation.spn_ensemble import SPNEnsemble
 
 logger = logging.getLogger(__name__)
 
-def create_uniform_ensemble(schema, hdf_path, sample_size, ensemble_path, dataset, max_table_data, post_sampling_factor):
+def create_uniform_ensemble(
+        schema,
+        hdf_path,
+        sample_size,
+        ensemble_path,
+        dataset,
+        max_table_data,
+        post_sampling_factor,
+        uniform_sample_seed=1,
+        exclude_multiplier_from_training=True):
     meta_data_path = hdf_path + '/meta_data.pkl'
-    prep = JoinDataPreparator(meta_data_path, schema, max_table_data=max_table_data)
+    prep = JoinDataPreparator(meta_data_path, schema, max_table_data=max_table_data, sample_seed=uniform_sample_seed)
     spn_ensemble = SPNEnsemble(schema)
 
     logger.info(f"Creating uniform ensemble.")
@@ -24,9 +33,19 @@ def create_uniform_ensemble(schema, hdf_path, sample_size, ensemble_path, datase
                          table_set={table_obj.table_name}, column_names=list(df_samples.columns),
                          table_meta_data=prep.table_meta_data)
         
-        logger.info(f"Building uniform tree structure...")
+        if exclude_multiplier_from_training:
+            logger.info("Building uniform tree structure with multiplier columns excluded from RDC/KMeans splits.")
+        else:
+            logger.info("Building uniform tree structure with multiplier columns included in RDC/KMeans splits.")
 
-        aqp_spn.learn_uniform(df_samples.values, sum_fanout=8, product_fanout=2, max_depth=4,leaf_fanout=10)
+        aqp_spn.learn_uniform(
+            df_samples.values,
+            sum_fanout=8,
+            product_fanout=2,
+            max_depth=4,
+            leaf_fanout=10,
+            exclude_multiplier_from_training=exclude_multiplier_from_training,
+        )
         
         spn_ensemble.add_spn(aqp_spn)
 

@@ -642,7 +642,14 @@ class AQPSPN(CombineSPN, RSPN):
 
         return ranges
 
-    def learn_uniform(self, train_data, sum_fanout=8, product_fanout=4, max_depth=12, leaf_fanout=10):
+    def learn_uniform(
+            self,
+            train_data,
+            sum_fanout=8,
+            product_fanout=4,
+            max_depth=12,
+            leaf_fanout=10,
+            exclude_multiplier_from_training=True):
         from spn.structure.Base import assign_ids
         from rspn.learning.rspn_learning import create_custom_leaf, get_split_rows_KMeans
         from rspn.rspn import build_ds_context
@@ -662,8 +669,12 @@ class AQPSPN(CombineSPN, RSPN):
                                       no_compression_scopes, train_data)
         
         
-        # 排除multiplier的列聚类的分支
-        self._uniform_multiplier_anchor_map = self._build_uniform_multiplier_anchor_map()
+        self.exclude_multiplier_from_uniform_training = bool(exclude_multiplier_from_training)
+        self._uniform_multiplier_anchor_map = (
+            self._build_uniform_multiplier_anchor_map()
+            if self.exclude_multiplier_from_uniform_training
+            else {}
+        )
 
         # Initial setup
         scope = list(range(len(self.column_names)))
@@ -717,6 +728,199 @@ class AQPSPN(CombineSPN, RSPN):
 
         return None
     # ==================================================
+
+    def _is_uniform_multiplier_scope(self, scope_idx):
+        return (
+            self.column_names is not None
+            and scope_idx < len(self.column_names)
+            and self.column_names[scope_idx] in self._uniform_multiplier_anchor_map
+        )
+
+    def _eligible_bucket_balance_indices(self, scope):
+        return [
+            local_idx
+            for local_idx, scoped_col in enumerate(scope)
+            if not self._is_uniform_multiplier_scope(scoped_col)
+        ]
+
+    def _row_clustering_indices(self, scope):
+        return self._eligible_bucket_balance_indices(scope)
+
+    @staticmethod
+    def _bucket_width_dispersion(widths):
+        widths = np.asarray(widths, dtype=np.float64)
+        positive_widths = widths[widths > 0]
+        if positive_widths.size == 0:
+            return 1.0
+        return float(np.max(positive_widths) / max(1.0, np.median(positive_widths)))
+
+    def _estimate_cluster_bucket_widths(self, local_data, labels, scope, n_clusters=None):
+        labels = np.asarray(labels, dtype=np.int64)
+        if n_clusters is None:
+            n_clusters = int(np.max(labels)) + 1 if labels.size else 0
+        eligible_indices = self._eligible_bucket_balance_indices(scope)
+        widths = np.zeros(int(n_clusters), dtype=np.int64)
+        per_column_counts = np.zeros((int(n_clusters), len(scope)), dtype=np.int64)
+        if len(eligible_indices) == 0:
+            return widths, per_column_counts
+        for cluster_idx in range(int(n_clusters)):
+            mask = labels == cluster_idx
+            if not np.any(mask):
+                continue
+            for local_col_idx in eligible_indices:
+                unique_count = int(np.unique(local_data[mask, local_col_idx]).size)
+                per_column_counts[cluster_idx, local_col_idx] = unique_count
+                widths[cluster_idx] = max(widths[cluster_idx], unique_count)
+        return widths, per_column_counts
+
+    def _rebalance_labels_by_bucket_pressure(
+        self,
+        local_data,
+        labels,
+        centers,
+        scope,
+        dispersion_limit=1.75,
+        max_move_fraction=0.10,
+        max_moves=2000,
+        distance_factor=1.5,
+        target_size_factor=2.0,
+        distance_data=None,
+    ):
+        labels = np.asarray(labels, dtype=np.int64).copy()
+        centers = np.asarray(centers)
+        distance_data = local_data if distance_data is None else np.asarray(distance_data)
+        n_clusters = int(centers.shape[0]) if centers.ndim >= 2 else (int(np.max(labels)) + 1 if labels.size else 0)
+        if local_data.shape[0] == 0 or n_clusters <= 1:
+            return labels
+        eligible_indices = self._eligible_bucket_balance_indices(scope)
+        if len(eligible_indices) == 0:
+            return labels
+        before_widths, per_column_counts = self._estimate_cluster_bucket_widths(local_data, labels, scope, n_clusters)
+        if self._bucket_width_dispersion(before_widths) <= float(dispersion_limit):
+            return labels
+        max_allowed_moves = int(min(max_moves, max(0, np.floor(local_data.shape[0] * float(max_move_fraction)))))
+        if max_allowed_moves <= 0:
+            return labels
+        row_indices = np.arange(local_data.shape[0])
+        avg_cluster_size = local_data.shape[0] / float(max(1, n_clusters))
+        max_target_size = max(1, int(np.ceil(avg_cluster_size * float(target_size_factor))))
+
+        for _ in range(max_allowed_moves):
+            current_widths, per_column_counts = self._estimate_cluster_bucket_widths(local_data, labels, scope, n_clusters)
+            current_dispersion = self._bucket_width_dispersion(current_widths)
+            if current_dispersion <= float(dispersion_limit):
+                break
+            source_cluster = int(np.argmax(current_widths))
+            source_width = int(current_widths[source_cluster])
+            if source_width <= 1 or np.sum(labels == source_cluster) <= 1:
+                break
+            pressure_local_indices = [
+                idx
+                for idx in eligible_indices
+                if int(per_column_counts[source_cluster, idx]) == source_width
+            ]
+            if not pressure_local_indices:
+                break
+            source_mask = labels == source_cluster
+            candidate_mask = np.zeros(labels.shape[0], dtype=bool)
+            for local_col_idx in pressure_local_indices:
+                source_values = local_data[source_mask, local_col_idx]
+                unique_values, counts = np.unique(source_values, return_counts=True)
+                singleton_values = set(unique_values[counts == 1].tolist())
+                if singleton_values:
+                    candidate_mask |= np.logical_and(
+                        source_mask,
+                        np.isin(local_data[:, local_col_idx], list(singleton_values)),
+                    )
+            candidates = row_indices[candidate_mask]
+            if candidates.size == 0:
+                break
+            if candidates.size > max_allowed_moves * 10:
+                candidates = candidates[: max_allowed_moves * 10]
+            cluster_sizes = np.bincount(labels, minlength=n_clusters)
+            target_order = sorted(
+                [idx for idx in range(n_clusters) if idx != source_cluster],
+                key=lambda idx: (int(current_widths[idx]), int(cluster_sizes[idx])),
+            )
+            best = None
+            for row_idx in candidates:
+                source_distance = float(np.linalg.norm(distance_data[row_idx] - centers[source_cluster]))
+                for target_cluster in target_order:
+                    if cluster_sizes[target_cluster] + 1 > max_target_size:
+                        continue
+                    target_distance = float(np.linalg.norm(distance_data[row_idx] - centers[target_cluster]))
+                    if target_distance > max(source_distance * float(distance_factor), 1e-12):
+                        continue
+                    proposed_labels = labels.copy()
+                    proposed_labels[row_idx] = target_cluster
+                    proposed_widths, _ = self._estimate_cluster_bucket_widths(local_data, proposed_labels, scope, n_clusters)
+                    proposed_dispersion = self._bucket_width_dispersion(proposed_widths)
+                    improves_width = int(np.max(proposed_widths)) < int(np.max(current_widths))
+                    improves_dispersion = proposed_dispersion < current_dispersion - 1e-9
+                    if not improves_width and not improves_dispersion:
+                        continue
+                    score = (
+                        int(np.max(current_widths)) - int(np.max(proposed_widths)),
+                        current_dispersion - proposed_dispersion,
+                        -target_distance,
+                    )
+                    if best is None or score > best[0]:
+                        best = (score, row_idx, target_cluster)
+            if best is None:
+                break
+            _, row_idx, target_cluster = best
+            labels[row_idx] = target_cluster
+        return labels
+
+    def _split_rows_kmeans_non_multiplier(
+        self,
+        local_data,
+        scope,
+        local_data_id,
+        n_clusters,
+        max_sampling_threshold_rows=100000,
+        seed=17,
+        bucket_balance=True,
+    ):
+        from sklearn.cluster import KMeans
+        from sklearn.exceptions import ConvergenceWarning
+        import warnings
+
+        clustering_indices = self._row_clustering_indices(scope)
+        if not clustering_indices:
+            center = np.mean(local_data, axis=0) if local_data.shape[0] > 0 else np.zeros(local_data.shape[1])
+            return [(local_data, scope, 1.0)], [center], [local_data_id]
+
+        clustering_data = local_data[:, clustering_indices]
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=ConvergenceWarning)
+            if clustering_data.shape[0] > max_sampling_threshold_rows:
+                data_sample = clustering_data[np.random.randint(clustering_data.shape[0], size=max_sampling_threshold_rows), :]
+                kmeans = KMeans(n_clusters=n_clusters, random_state=seed)
+                clusters = kmeans.fit(data_sample).predict(clustering_data)
+            else:
+                kmeans = KMeans(n_clusters=n_clusters, random_state=seed)
+                clusters = kmeans.fit_predict(clustering_data)
+        if bucket_balance:
+            clusters = self._rebalance_labels_by_bucket_pressure(
+                local_data,
+                clusters,
+                kmeans.cluster_centers_,
+                scope,
+                distance_data=clustering_data,
+            )
+        result = []
+        result_ids = []
+        cluster_centers = []
+        for cluster_idx in range(int(n_clusters)):
+            mask = clusters == cluster_idx
+            if not np.any(mask):
+                continue
+            sub_data = local_data[mask]
+            result.append((sub_data, scope, float(sub_data.shape[0] / max(1, local_data.shape[0]))))
+            result_ids.append(np.asarray(local_data_id)[mask])
+            cluster_centers.append(np.mean(sub_data, axis=0))
+        return result, cluster_centers, result_ids
 
     def _build_dummy_leaf_node(self):
         from rspn.algorithms.expectations_aby3 import DummyLeaf
@@ -825,9 +1029,7 @@ class AQPSPN(CombineSPN, RSPN):
                         scope_to_cluster[scoped_col] = cluster_idx
 
                 for multiplier_scope in multiplier_scopes:
-                    anchor_scope = self._find_uniform_multiplier_anchor_scope(multiplier_scope, scope)
-                    cluster_idx = scope_to_cluster.get(anchor_scope, 0)
-                    cluster_scopes[cluster_idx].append(multiplier_scope)
+                    cluster_scopes[0].append(multiplier_scope)
 
                 result = []
                 for cluster_idx, sub_scope in enumerate(cluster_scopes):
@@ -922,9 +1124,16 @@ class AQPSPN(CombineSPN, RSPN):
                 cluster_centers = [np.mean(data, axis=0)] if data.shape[0] > 0 else [np.zeros(data.shape[1])]
                 result_ids = [data_id]
             else:
-                split_rows_KMeans = get_split_rows_KMeans(max_sampling_threshold_rows=100000, n_clusters=n_clusters, seed=17)
                 try:
-                    result, cluster_centers, result_ids = split_rows_KMeans(data, self.ds_context, scope, data_id)
+                    result, cluster_centers, result_ids = self._split_rows_kmeans_non_multiplier(
+                        data,
+                        scope,
+                        data_id,
+                        n_clusters,
+                        max_sampling_threshold_rows=100000,
+                        seed=17,
+                        bucket_balance=depth + 2 >= max_depth,
+                    )
                 except Exception as e:
                     logger.warning(f"Clustering failed at depth {depth}: {e}. Fallback to single cluster.")
                     result = [(data, scope, 1.0)]

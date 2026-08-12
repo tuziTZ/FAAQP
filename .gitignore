@@ -15,8 +15,10 @@ flights-benchmark/
 imdb-benchmark/
 imdb-benchmark-1k/
 ssb-benchmark/
+tpch-benchmark/
 
 benchmarks/**/ground_truth*.pkl
+benchmarks/*
 baselines/aqp/results/
 
 .DS_Store

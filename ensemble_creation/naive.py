@@ -10,9 +10,10 @@ RATIO_MIN_INSTANCE_SLICE = 1 / 100
 
 
 def create_naive_all_split_ensemble(schema, hdf_path, sample_size, ensemble_path, dataset, bloom_filters,
-                                    rdc_threshold, max_table_data, post_sampling_factor, incremental_learning_rate):
+                                    rdc_threshold, max_table_data, post_sampling_factor, incremental_learning_rate,
+                                    sample_seed=None):
     meta_data_path = hdf_path + '/meta_data.pkl'
-    prep = JoinDataPreparator(meta_data_path, schema, max_table_data=max_table_data)
+    prep = JoinDataPreparator(meta_data_path, schema, max_table_data=max_table_data, sample_seed=sample_seed)
     spn_ensemble = SPNEnsemble(schema)
 
     logger.info(f"Creating naive ensemble.")

@@ -1,10 +1,32 @@
 import argparse
+import collections
+import collections.abc
+import fractions
 import logging
+import math
 import os
 import shutil
 import time
 
 import numpy as np
+import scipy
+
+if not hasattr(fractions, 'gcd'):
+    fractions.gcd = math.gcd
+for _legacy_attr in ('Mapping', 'MutableMapping', 'Sequence', 'Iterable', 'Set'):
+    if not hasattr(collections, _legacy_attr) and hasattr(collections.abc, _legacy_attr):
+        setattr(collections, _legacy_attr, getattr(collections.abc, _legacy_attr))
+if not hasattr(np, 'int'):
+    np.int = int
+if not hasattr(np, 'bool'):
+    np.bool = bool
+if not hasattr(np, 'float_'):
+    np.float_ = np.float64
+if not hasattr(scipy, 'NINF'):
+    scipy.NINF = -np.inf
+if not hasattr(scipy, 'PINF'):
+    scipy.PINF = np.inf
+
 import utils.toolkit
 
 from rspn.code_generation.generate_code import generate_ensemble_code
@@ -21,6 +43,14 @@ from schemas.flights.schema import gen_flights_origin_schema, gen_flights_sample
 from schemas.imdb.schema import gen_job_light_imdb_schema
 from schemas.ssb.schema import gen_500gb_ssb_schema, gen_sf50_ssb_schema
 from schemas.tpc_ds.schema import gen_1t_tpc_ds_schema
+from schemas.tpch.schema import (
+    gen_tpch_schema,
+    gen_tpch_sf0_01_schema,
+    gen_tpch_sf0_1_schema,
+    gen_tpch_sf10_schema,
+    gen_tpch_sf100_schema,
+    gen_tpch_sf1_schema,
+)
 from schemas.dom1000.schema import gen_dom1000_schema, gen_c00s10_schema, gen_c02s10_schema, gen_c04s10_schema, \
     gen_c04s00_schema, gen_c04s05_schema, gen_c04s15_schema, gen_c04s20_schema, gen_c06s10_schema, gen_c08s10_schema, \
     gen_c10s10_schema
@@ -53,6 +83,17 @@ if __name__ == '__main__':
     parser.add_argument('--samples_per_spn', help="How many samples to use for joins with n tables",
                         nargs='+', type=int, default=[10000000, 10000000, 2000000, 2000000])
     parser.add_argument('--post_sampling_factor', nargs='+', type=int, default=[30, 30, 2, 1])
+    parser.add_argument('--uniform_sample_seed', type=int, default=1,
+                        help='Deterministic per-table sample seed for single and uniform ensembles.')
+    parser.add_argument('--uniform_exclude_multiplier_from_training',
+                        dest='uniform_exclude_multiplier_from_training',
+                        action='store_true',
+                        default=True,
+                        help='Exclude multiplier columns from uniform RDC/KMeans row splits.')
+    parser.add_argument('--uniform_include_multiplier_in_training',
+                        dest='uniform_exclude_multiplier_from_training',
+                        action='store_false',
+                        help='Include multiplier columns in uniform RDC/KMeans row splits.')
     parser.add_argument('--rdc_threshold', help='If RDC value is smaller independence is assumed', type=float,
                         default=0.3)
     parser.add_argument('--bloom_filters', help='Generates Bloom filters for grouping', action='store_true')
@@ -110,13 +151,22 @@ if __name__ == '__main__':
     args.exploit_overlapping = not args.no_exploit_overlapping
     args.merge_indicator_exp = not args.no_merge_indicator_exp
 
-    os.makedirs('logs', exist_ok=True)
+    log_dir = os.environ.get('FAAQP_LOG_DIR', 'logs')
+    try:
+        os.makedirs(log_dir, exist_ok=True)
+        log_path = os.path.join(log_dir, "{}_{}.log".format(args.dataset, time.strftime("%Y%m%d-%H%M%S")))
+        file_handler = logging.FileHandler(log_path)
+    except OSError:
+        fallback_log_dir = os.path.join('/tmp', 'faaqp_logs')
+        os.makedirs(fallback_log_dir, exist_ok=True)
+        log_path = os.path.join(fallback_log_dir, "{}_{}.log".format(args.dataset, time.strftime("%Y%m%d-%H%M%S")))
+        file_handler = logging.FileHandler(log_path)
     logging.basicConfig(
         level=args.log_level,
         # [%(threadName)-12.12s]
         format="%(asctime)s [%(levelname)-5.5s]  %(message)s",
         handlers=[
-            logging.FileHandler("logs/{}_{}.log".format(args.dataset, time.strftime("%Y%m%d-%H%M%S"))),
+            file_handler,
             logging.StreamHandler()
         ])
     logger = logging.getLogger(__name__)
@@ -151,6 +201,18 @@ if __name__ == '__main__':
         schema = gen_flights_sample001_schema(table_csv_path)
     elif args.dataset == 'tpc-ds-1t':
         schema = gen_1t_tpc_ds_schema(table_csv_path)
+    elif args.dataset == 'tpch':
+        schema = gen_tpch_schema(table_csv_path)
+    elif args.dataset == 'tpch-sf0_01':
+        schema = gen_tpch_sf0_01_schema(table_csv_path)
+    elif args.dataset == 'tpch-sf0_1':
+        schema = gen_tpch_sf0_1_schema(table_csv_path)
+    elif args.dataset == 'tpch-sf1':
+        schema = gen_tpch_sf1_schema(table_csv_path)
+    elif args.dataset == 'tpch-sf10':
+        schema = gen_tpch_sf10_schema(table_csv_path)
+    elif args.dataset == 'tpch-sf100':
+        schema = gen_tpch_sf100_schema(table_csv_path)
     elif args.dataset == 'c00s10':
         schema = gen_c00s10_schema(table_csv_path)
     elif args.dataset == 'c02s10':
@@ -209,7 +271,8 @@ if __name__ == '__main__':
             create_naive_all_split_ensemble(schema, args.hdf_path, args.samples_per_spn[0], args.ensemble_path,
                                             args.dataset, args.bloom_filters, args.rdc_threshold,
                                             args.max_rows_per_hdf_file, args.post_sampling_factor[0],
-                                            incremental_learning_rate=args.incremental_learning_rate)
+                                            incremental_learning_rate=args.incremental_learning_rate,
+                                            sample_seed=args.uniform_sample_seed)
         elif args.ensemble_strategy == 'relationship':
             naive_every_relationship_ensemble(schema, args.hdf_path, args.samples_per_spn[1], args.ensemble_path,
                                               args.dataset, args.bloom_filters, args.rdc_threshold,
@@ -226,7 +289,9 @@ if __name__ == '__main__':
                                  incremental_condition=args.incremental_condition)
         elif args.ensemble_strategy == 'uniform':
             create_uniform_ensemble(schema, args.hdf_path, args.samples_per_spn[0], args.ensemble_path,
-                                    args.dataset, args.max_rows_per_hdf_file, args.post_sampling_factor[0])
+                                    args.dataset, args.max_rows_per_hdf_file, args.post_sampling_factor[0],
+                                    uniform_sample_seed=args.uniform_sample_seed,
+                                    exclude_multiplier_from_training=args.uniform_exclude_multiplier_from_training)
 
         else:
             raise NotImplementedError
